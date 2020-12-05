@@ -1,0 +1,45 @@
+{
+  "name": "fauna-upload",
+  "description": "Upload resources and data to your Fauna database.",
+  "version": "0.0.1",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cheap-glitch/fauna-upload.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cheap-glitch/fauna-upload/issues"
+  },
+  "author": "cheap glitch <cheap.glitch@gmail.com> (https://github.com/cheap-glitch)",
+  "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
+  "main": "index.min.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "npm run build:ts && npm run build:minify",
+    "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output index.min.js -- index.js",
+    "build:ts": "tsc",
+    "lint": "eslint . --ext .ts",
+    "watch": "nodemon -e ts --watch . --exec 'npm run build:ts || exit 1'"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "faunadb": "^4.0.0",
+    "node-fetch": "^2.6.1",
+    "ora": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.10",
+    "@types/node-fetch": "^2.5.7",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint": "^7.13.0",
+    "eslint-plugin-smarter-tabs": "^1.1.2",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.6",
+    "terser": "^5.3.8",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  }
+}
