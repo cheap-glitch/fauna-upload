@@ -1,4 +1,9 @@
-node_modules/
+# npm
+/node_modules/
+
+# Build artefacts
+/build/
+
+# Code coverage
 .nyc_output/
 .codecov.yml
-/index*.js

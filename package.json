@@ -12,14 +12,12 @@
   },
   "author": "cheap glitch <cheap.glitch@gmail.com> (https://github.com/cheap-glitch)",
   "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
-  "main": "index.min.js",
+  "main": "build/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "build": "npm run build:ts && npm run build:minify",
-    "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output index.min.js -- index.js",
-    "build:ts": "tsc",
+    "build": "tsc",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
