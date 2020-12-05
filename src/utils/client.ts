@@ -11,6 +11,7 @@ export function getFaunaClient(): FaunaClient | undefined {
 		return undefined;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore: https://github.com/fauna/faunadb-js/issues/341
 	return new FaunaClient({ secret, fetch });
 }
