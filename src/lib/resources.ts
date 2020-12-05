@@ -15,7 +15,6 @@ export async function uploadResources(client: FaunaClient, resources: Resource, 
 		}
 	})();
 
-	// Update a resource/document if it already exists, otherwise create it
 	const updateOrCreateResource = q.If(q.Exists(resourceIsData ? q.Var('match') : INDEX(q.Var('name'))),
 		q.Do(
 			resourceIsData

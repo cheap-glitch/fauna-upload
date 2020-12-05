@@ -1,7 +1,7 @@
 /*!
  * fauna-upload
  *
- * Upload resources and data to your Fauna database.
+ * Upload resources and data to FaunaDB with ease.
  *
  * Copyright (c) 2020-present, cheap glitch
  * This software is distributed under the ISC license

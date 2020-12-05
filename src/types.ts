@@ -1,5 +1,5 @@
 export interface Resource {
-	name: string,
+	name: string
 }
 
 export enum ResourceType {
