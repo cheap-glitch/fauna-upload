@@ -10,12 +10,12 @@
   "bugs": {
     "url": "https://github.com/cheap-glitch/fauna-upload/issues"
   },
+  "author": "cheap glitch <cheap.glitch@gmail.com> (https://github.com/cheap-glitch)",
+  "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
   "keywords": [
     "fauna",
     "faunadb"
   ],
-  "author": "cheap glitch <cheap.glitch@gmail.com> (https://github.com/cheap-glitch)",
-  "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
   "main": "index.min.js",
   "directories": {
     "test": "test"
@@ -24,8 +24,13 @@
     "build": "npm run build:ts && npm run build:minify",
     "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output index.min.js -- index.js",
     "build:ts": "tsc-bundle ./tsconfig.json --exportAs commonjs",
+    "coverage": "jest --coverage",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
     "test": "jest"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "coverageDirectory": ".coverage"
   },
   "dependencies": {
     "chalk": "^4.1.0",
