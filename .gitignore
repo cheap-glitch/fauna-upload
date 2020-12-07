@@ -2,7 +2,7 @@
 /node_modules/
 
 # Build artefacts
-/build/
+/index*.js
 
 # Code coverage
 .nyc_output/

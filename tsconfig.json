@@ -1,8 +1,9 @@
 {
-  "files": ["src/index.ts"],
+  "files": ["index.ts"],
   "compilerOptions": {
-    "outDir":                     "build",
+    "outDir":                     ".",
     "module":                     "commonjs",
+    "moduleResolution":           "node",
     "target":                     "es2018",
     "lib":                        ["dom", "es2019"],
     "strict":                     true,
