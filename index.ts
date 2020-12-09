@@ -7,10 +7,6 @@
  * This software is distributed under the ISC license
  */
 
-import { getFaunaClient } from './src/utils/client';
-import { uploadSchema } from './src/lib/schema';
-import { uploadResources } from './src/lib/resources';
-
-console.info(getFaunaClient);
-console.info(uploadSchema);
-console.info(uploadResources);
+export { createFaunaClient } from './src/utils/client';
+export { uploadSchema      } from './src/lib/schema';
+export { uploadResources   } from './src/lib/resources';
