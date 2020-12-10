@@ -1,9 +1,12 @@
-import fetch from 'node-fetch';
+import { fetch } from 'fetch-h2';
 
 import { wait } from '../utils';
 import * as log from '../utils/log';
 
-// @TODO: confirm override (outside of function)
+// @TODO(1.0.0): confirm override (outside of function)
+// @TODO(1.0.0): change API to wrap options in map ({ overwrite: boolean, previews: string[] })
+	// - update tests
+	// - update readme
 export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, override = false, previews: Array<string> = []): Promise<boolean> {
 	// @TODO: spinner
 	// @TODO: extract messaging outside of function?
