@@ -24,12 +24,13 @@
     "build": "npm run build:ts && npm run build:minify",
     "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output index.min.js -- index.js",
     "build:ts": "tsc-bundle ./tsconfig.json --exportAs commonjs",
-    "coverage": "jest --coverage",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
-    "test": "jest"
+    "test": "jest --useStderr",
+    "upload:coverage": "coveralls < .coverage/lcov.info"
   },
   "jest": {
     "preset": "ts-jest",
+    "collectCoverage": true,
     "coverageDirectory": ".coverage"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "@types/node": "^14.14.12",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
+    "coveralls": "^3.1.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.13.0",
     "eslint-plugin-smarter-tabs": "^1.1.2",
