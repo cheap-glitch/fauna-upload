@@ -1,7 +1,8 @@
-import got from 'got';
 import dotenv from 'dotenv';
+import { fetch } from 'fetch-h2';
 
 import * as log from '../src/utils/log';
+import { createFaunaClient } from '../src/utils/client';
 
 dotenv.config();
 if (!process.env.FAUNA_TEST_DB_TOKEN) {
@@ -15,24 +16,37 @@ if (!process.env.FAUNA_TEST_DB_TOKEN) {
 }
 
 export const secret = process.env.FAUNA_TEST_DB_TOKEN;
-// export const client = createFaunaClient(secret);
+export const client = createFaunaClient(secret);
 
 export { wait } from '../src/utils';
 
-export async function isTypeInSchema(typeName: string): Promise<boolean> {
+export async function isTypeInSchema(typeName: string | RegExp): Promise<boolean> {
 	const data = await graphql('{ __schema { types { name } } }');
+	if (!data || !data.__schema || !data.__schema.types) {
+		return undefined;
+	}
 
-	/* @FIXME: remove `any` type */
-	return (data && data.__schema.types.some((type: any) => type.name == typeName));
+	return data.__schema.types.some((type: Record<string, string>) => {
+		return (typeof typeName == 'string') ? typeName == type.name : typeName.test(type.name);
+	});
 }
 
+// @FIXME: remove `any` type
 async function graphql(query: string): Promise<any | undefined> {
-	/* @FIXME: remove `any` type */
-	const response: any = await got.post('https://graphql.fauna.com/graphql', {
-		json:         { query },
-		headers:      { Authorization: `Bearer ${secret}` },
-		responseType: 'json',
+	const response = await fetch('https://graphql.fauna.com/graphql', {
+		method:  'POST',
+		headers: { Authorization: `Bearer ${secret}` },
+		json:    { query },
 	});
 
-	return response?.body?.data ?? undefined;
+	let json;
+	try {
+		json = await response.json();
+	} catch (error) {
+		log.error(error);
+
+		return undefined;
+	}
+
+	return json.data || undefined;
 }
