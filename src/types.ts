@@ -1,15 +1,22 @@
-export interface Resource {
+export interface FaunaResource {
 	name: string
 }
 
-export enum ResourceType {
+export enum FaunaResourceType {
 	Data,
 	Role,
 	Index,
 	Function,
 }
 
-export enum QueryResult {
+export interface FaunaDataCollection {
+	collection: string
+	index:      string
+	key:        string
+	data:       Array<Record<string, any>>
+}
+
+export enum FaunaQueryResult {
 	Created = 'created',
 	Updated = 'updated',
 }
