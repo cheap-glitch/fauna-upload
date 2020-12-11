@@ -14,7 +14,7 @@ beforeEach(() => wait(500));
 test("01. override GraphQL schema", async () => { // {{{
 
 	const schema = Readable.from(`type TestType${timestamp} { field: Boolean }`);
-	await expect(uploadSchema(schema, secret, true)).resolves.toBe(true);
+	await expect(uploadSchema(schema, secret, { override: true })).resolves.toBe(true);
 
 	await wait(500);
 	await expect(isTypeInSchema(`TestType${timestamp}`)).resolves.toBe(true);
