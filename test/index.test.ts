@@ -11,7 +11,7 @@ const timestamp = Date.now();
 // Wait a little bit between each test to avoid flooding the database service
 beforeEach(() => wait(500));
 
-test("01. override GraphQL schema", async() => { // {{{
+test("01. override GraphQL schema", async () => { // {{{
 
 	const schema = Readable.from(`type TestType${timestamp} { field: Boolean }`);
 	await expect(uploadSchema(schema, secret, true)).resolves.toBe(true);
@@ -20,7 +20,7 @@ test("01. override GraphQL schema", async() => { // {{{
 	await expect(isTypeInSchema(`TestType${timestamp}`)).resolves.toBe(true);
 	await expect(isTypeInSchema(/^User/)).resolves.toBe(false);
 
-}, 3000 + 90*1000 + 500); // }}}
+}, 90*1000 + 500); // }}}
 
 test("02. update GraphQL schema", async () => { // {{{
 
@@ -31,7 +31,7 @@ test("02. update GraphQL schema", async () => { // {{{
 	await expect(isTypeInSchema(`User${timestamp}`)).resolves.toBe(true);
 	await expect(isTypeInSchema(/^TestType/)).resolves.toBe(true);
 
-}, 3000 + 500); // }}}
+}, 3000); // }}}
 
 /*
 test("03. upload new data", async () => { // {{{

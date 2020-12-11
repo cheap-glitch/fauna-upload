@@ -20,7 +20,7 @@ export const client = createFaunaClient(secret);
 
 export { wait } from '../src/utils';
 
-export async function isTypeInSchema(typeName: string | RegExp): Promise<boolean> {
+export async function isTypeInSchema(typeName: string | RegExp): Promise<boolean | undefined> {
 	const data = await graphql('{ __schema { types { name } } }');
 	if (!data || !data.__schema || !data.__schema.types) {
 		return undefined;
