@@ -4,6 +4,14 @@
 ![Latest release](https://badgen.net/github/release/cheap-glitch/fauna-upload?color=green)
 [![Coverage status](https://coveralls.io/repos/github/cheap-glitch/fauna-upload/badge.svg?branch=main)](https://coveralls.io/github/cheap-glitch/fauna-upload?branch=main)
 
+```javascript
+const { Readable }     = require('stream');
+const { uploadSchema } = require('fauna-upload');
+
+require('dotenv').config();
+uploadSchema(Readable.from('type Query { allUsers: [User!] }'), process.env.FAUNA_SECRET, { override: true });
+```
+
 ## License
 ```text
 Copyright (c) 2020-present, cheap glitch
