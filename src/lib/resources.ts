@@ -1,9 +1,9 @@
 import { Client as FaunaClient, query as q } from 'faunadb';
+import FaunaResponse from 'faunadb/src/types/RequestResult';
 
 import { FaunaResource, FaunaResourceType, FaunaQueryResult } from '../types';
 
-// @FIXME: replace `any` by fauna query response type
-export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<any | undefined> {
+export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaResponse | undefined> {
 	const [INDEX, CREATE] = (() => {
 		switch (type) {
 			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole    ];
@@ -29,9 +29,9 @@ export async function uploadResources(client: FaunaClient, type: FaunaResourceTy
 		)
 	))));
 
-	let reponse;
+	let reponse: FaunaResponse;
 	try {
-		reponse = await query;
+		reponse = (await query) as FaunaResponse;
 	} catch(error) {
 		console.error(error);
 
