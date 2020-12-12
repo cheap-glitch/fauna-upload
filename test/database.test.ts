@@ -22,14 +22,14 @@ beforeEach(() => wait(500));
 
 test.only("upload new data", async () => { // {{{
 
-	const timestamp = Date.now();
+	const timestamp = '' + Date.now();
 
 	// Setup
 	if (!(await db.collectionExists('users'))) {
 		await db.createCollection('users');
 	}
-	if (!(await db.indexExists('users', 'users_keys'))) {
-		await db.createIndex('users', 'users_keys');
+	if (!(await db.indexExists('users_keys'))) {
+		await db.createIndex('users', 'users_keys', { unique: true, terms: [{ field: ['data', 'key'] }] });
 	}
 
 	// Action
@@ -41,7 +41,7 @@ test.only("upload new data", async () => { // {{{
 	}]);
 
 	// Tests
-	expect(reponse).toBe(FaunaQueryResult.Created);
-	await expect(db.documentExists('users', 'users_keys', timestamp)).resolves.toBe(true);
+	expect(reponse).toEqual([[FaunaQueryResult.Created]]);
+	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 }); // }}}

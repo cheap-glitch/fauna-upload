@@ -1,12 +1,39 @@
-// import FaunaExpr from 'faunadb/src/types/Expr';
 import { Client as FaunaClient, Expr as FaunaExpr, query as q } from 'faunadb';
+
+type FaunaIndexTerm   = Record<string, Array<string>>;
+type FaunaIndexParams = Record<string, boolean | string | Array<FaunaIndexTerm>>;
 
 export class Database {
 	name: string;
 	private client: FaunaClient;
 
+	async documentExists(index: string, key: string): Promise<boolean> {
+		return await this.query(q.Exists(q.Match(q.Index(index), key)));
+	}
+
+	async indexExists(name: string): Promise<boolean> {
+		return await this.query(q.Exists(q.Index(name)));
+	}
+
+	async collectionExists(name: string): Promise<boolean> {
+		return await this.query(q.Exists(q.Collection(name)));
+	}
+
+	async createIndex(collection: string, name: string, params: FaunaIndexParams): Promise<void> {
+		await this.query(q.Let(
+			{
+				source: q.Collection(collection),
+			},
+			q.CreateIndex({
+				name,
+				source: q.Var('source'),
+				...params
+			})
+		));
+	}
+
 	async createCollection(name: string): Promise<void> {
-		await this.query(q.CreateCollection(name));
+		await this.query(q.CreateCollection({ name }));
 	}
 
 	async destroy(): Promise<void> {
@@ -26,7 +53,8 @@ export class Database {
 			response = await this.client.query(query);
 		} catch (error) {
 			console.error(error);
-			process.exit(1);
+
+			return undefined;
 		}
 
 		return response as any;

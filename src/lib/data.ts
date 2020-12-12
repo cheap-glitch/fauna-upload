@@ -1,17 +1,17 @@
 import { Client as FaunaClient, query as q } from 'faunadb';
-import FaunaResponse from 'faunadb/src/types/RequestResult';
-
 import { FaunaDataCollection, FaunaQueryResult } from '../types';
 
-export async function uploadData(client: FaunaClient, resources: Array<FaunaDataCollection>): Promise<FaunaResponse | undefined> {
+export type FaunaDataUploadResults = Array<Array<FaunaQueryResult>>;
+
+export async function uploadData(client: FaunaClient, resources: Array<FaunaDataCollection>): Promise<FaunaDataUploadResults | undefined> {
 	// @TODO(1.1.0): add support for creating connections automatically
-	const query = client.query(q.Foreach(resources, q.Lambda('resource', q.Let(
+	const query = client.query(q.Map(resources, q.Lambda('resource', q.Let(
 		{
 			collection: q.Select(['collection'], q.Var('resource')),
 			index:      q.Select(['index'],      q.Var('resource')),
 			key:        q.Select(['key'],        q.Var('resource')),
 		},
-		q.Foreach(q.Select(['documents'], q.Var('resource')), q.Lambda('document', q.Let(
+		q.Map(q.Select(['documents'], q.Var('resource')), q.Lambda('document', q.Let(
 			{
 				match: q.Match(q.Var('index'), q.Select([q.Var('key')], q.Var('document')))
 			},
@@ -28,14 +28,14 @@ export async function uploadData(client: FaunaClient, resources: Array<FaunaData
 		)))
 	))));
 
-	let reponse: FaunaResponse;
+	let response;
 	try {
-		reponse = (await query) as FaunaResponse;
+		response = (await query) as FaunaDataUploadResults;
 	} catch(error) {
 		console.error(error);
 
 		return undefined;
 	}
 
-	return reponse;
+	return response;
 }
