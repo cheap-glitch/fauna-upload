@@ -36,8 +36,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "faunadb": "^4.0.0",
-    "fetch-h2": "^2.5.1",
-    "ora": "^5.1.0"
+    "fetch-h2": "^2.5.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
@@ -52,7 +51,7 @@
     "terser": "^5.5.1",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4.0.5",
+    "typescript": "^4.1.3",
     "typescript-bundle": "^1.0.17"
   }
 }
