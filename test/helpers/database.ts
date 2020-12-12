@@ -1,29 +1,39 @@
-import FaunaExpr from 'faunadb/src/types/Expr';
-import { Client as FaunaClient, query as q } from 'faunadb';
+// import FaunaExpr from 'faunadb/src/types/Expr';
+import { Client as FaunaClient, Expr as FaunaExpr, query as q } from 'faunadb';
 
-export async function createCollection(client: FaunaClient, name: string): Promise<void> {
-	await queryClient(client, q.CreateCollection(name));
-}
+export class Database {
+	name: string;
+	private client: FaunaClient;
 
-export async function setupDatabase(client: FaunaClient, name: string): Promise<string> {
-	const { ref    } = await queryClient(client, q.CreateDatabase({ name }));
-	const { secret } = await queryClient(client, q.CreateKey({ role: 'server', database: ref }));
-
-	return secret;
-}
-
-export async function destroyDatabase(client: FaunaClient, name: string): Promise<void> {
-	await queryClient(client, q.Delete(q.Database(name)));
-}
-
-async function queryClient(client: FaunaClient, query: FaunaExpr): Promise<any> {
-	let response;
-	try {
-		response = await client.query(query);
-	} catch (error) {
-		console.error(error);
-		process.exit(1);
+	async createCollection(name: string): Promise<void> {
+		await this.query(q.CreateCollection(name));
 	}
 
-	return response as any;
+	async destroy(): Promise<void> {
+		await this.query(q.Delete(q.Database(this.name)));
+	}
+
+	static async create(name: string, client: FaunaClient): Promise<Database> {
+		const db = new Database(name, client);
+		await db.query(q.CreateDatabase({ name }));
+
+		return db;
+	}
+
+	async query(query: FaunaExpr): Promise<any> {
+		let response;
+		try {
+			response = await this.client.query(query);
+		} catch (error) {
+			console.error(error);
+			process.exit(1);
+		}
+
+		return response as any;
+	}
+
+	private constructor(name: string, client: FaunaClient) {
+		this.name   = name;
+		this.client = client;
+	}
 }
