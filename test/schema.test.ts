@@ -12,9 +12,9 @@ const timestamp = '' + Date.now();
 // Setup a new child database for the tests
 let db: Database;
 beforeAll(async () => { db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`); });
-afterAll(() => await db.destroy(adminSecret));
+afterAll(() => db.destroy(adminSecret));
 
-test.only("upload a new schema", async () => { // {{{
+test("upload a new schema", async () => { // {{{
 
 	// Action
 	const result = await uploadSchema(db.getSecret(), Readable.from('type Query { allUsers: [User!] }, type User { name: String! }'), { override: false });
@@ -30,18 +30,22 @@ test.only("upload a new schema", async () => { // {{{
 
 }); // }}}
 
-// test("update an existing schema", async () => { // {{{
+test("update an existing schema", async () => { // {{{
 
-// 	// Setup
-// 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
+	// Setup
+	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
 
-// 	// Action
-// 	const result = await uploadSchema(db.getSecret(), Readable.from('type Query { allUsers: [User!] }, type UserUpdated { name: String! }'), { override: false });
+	// Action
+	const result = await uploadSchema(db.getSecret(), Readable.from('type Query { allNewUsers: [NewUser!] }, type NewUser { name: String! }'), { override: false });
 
-// 	// Tests
-// 	console.log(result);
-// 	expect(result).toBeInstanceOf(Response);
-// 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(false);
-// 	await expect(typeExists(db.getSecret(), 'UserUpdated')).resolves.toBe(true);
+	// Tests
+	expect(result).toBeInstanceOf(Response);
+	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
+	await expect(typeExists(db.getSecret(), 'NewUser')).resolves.toBe(true);
 
-// }); // }}}
+	// Cleanup
+	if (result instanceof Response) {
+		await result.text();
+	}
+
+}); // }}}
