@@ -1,6 +1,6 @@
 import { createFaunaClient } from '../src/utils/client';
 
-import { adminToken } from './helpers/token';
+import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
 import { uploadData } from '../src/lib/data';
@@ -10,7 +10,7 @@ import { FaunaQueryResult } from '../src/types';
 const timestamp = '' + Date.now();
 
 // Create a new admin client for the test database
-const client = createFaunaClient(adminToken);
+const client = createFaunaClient(adminSecret);
 
 // Setup a new child database for the tests
 let db: Database;
