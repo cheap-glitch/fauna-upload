@@ -1,11 +1,10 @@
-import { createFaunaClient } from '../src/utils/client';
-
 import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
+import { FaunaQueryResult } from '../src/types';
+import { createFaunaClient } from '../src/lib/client';
 import { uploadData } from '../src/lib/data';
 // import { uploadResources } from '../src/lib/resources';
-import { FaunaQueryResult } from '../src/types';
 
 const timestamp = '' + Date.now();
 

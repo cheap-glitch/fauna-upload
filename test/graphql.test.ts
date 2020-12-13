@@ -1,10 +1,10 @@
 import { Readable } from 'stream';
-import { createFaunaClient } from '../src/utils/client';
 
 import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 import { typeExists } from './helpers/graphql';
 
+import { createFaunaClient } from '../src/lib/client';
 import { uploadSchema } from '../src/lib/schema';
 
 const timestamp = '' + Date.now();
