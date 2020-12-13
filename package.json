@@ -16,13 +16,13 @@
     "fauna",
     "faunadb"
   ],
-  "main": "index.min.js",
+  "main": "build/index.min.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "build": "npm run build:ts && npm run build:minify",
-    "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output index.min.js -- index.js",
+    "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output build/index.min.js -- build/index.js",
     "build:ts": "tsc-bundle ./tsconfig.json --exportAs commonjs",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
     "test": "jest --useStderr",
