@@ -37,10 +37,11 @@
     "preset": "ts-jest",
     "collectCoverage": true,
     "coverageDirectory": ".coverage",
-    "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setup.ts"
+    ]
   },
   "dependencies": {
-    "chalk": "^4.1.0",
     "faunadb": "^4.0.0",
     "fetch-h2": "^2.5.1"
   },
