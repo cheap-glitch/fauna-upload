@@ -2,7 +2,10 @@ import { fetch } from 'fetch-h2';
 
 export async function typeExists(secret: string, typeName: string | RegExp): Promise<boolean | undefined> {
 	const data = await graphql(secret, '{ __schema { types { name } } }');
+
 	if (!data || !data.__schema || !data.__schema.types) {
+		console.error(new Error('Missing schema information in response data: ' + JSON.stringify(data, null, 2)));
+
 		return undefined;
 	}
 

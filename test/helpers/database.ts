@@ -66,7 +66,7 @@ export class Database {
 		const adminClient = createFaunaClient(adminSecret);
 
 		const { ref    } = await queryClient(adminClient, q.CreateDatabase({ name }));
-		const { secret } = await queryClient(adminClient, q.CreateKey({ database: ref, role: 'server' }));
+		const { secret } = await queryClient(adminClient, q.CreateKey({ database: ref, role: 'admin' }));
 
 		return new Database(name, secret);
 	}
