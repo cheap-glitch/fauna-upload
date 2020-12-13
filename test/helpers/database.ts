@@ -7,6 +7,10 @@ export class Database {
 	name: string;
 	private client: FaunaClient;
 
+	async documentHasProperty(index: string, key: string, prop: string): Promise<boolean> {
+		return !!(await this.query(q.Select(['data', prop], q.Get(q.Match(q.Index(index), key)), undefined)));
+	}
+
 	async documentExists(index: string, key: string): Promise<boolean> {
 		return await this.query(q.Exists(q.Match(q.Index(index), key)));
 	}
@@ -17,6 +21,10 @@ export class Database {
 
 	async collectionExists(name: string): Promise<boolean> {
 		return await this.query(q.Exists(q.Collection(name)));
+	}
+
+	async createDocument(collection: string, data: Record<string, boolean | number | string>): Promise<void> {
+		await this.query(q.Create(collection, { data }));
 	}
 
 	async createIndex(collection: string, name: string, params: FaunaIndexParams): Promise<void> {
