@@ -1,25 +1,17 @@
-import { fetch } from 'fetch-h2';
+import { fetch, Response, AbortError, TimeoutError } from 'fetch-h2';
 
 import { wait } from '../utils';
-import * as log from '../utils/log';
 
 interface UploadOptions {
 	override?: boolean
 	previews?: Array<string>
 }
 
-// @TODO(1.0.0): extract messaging outside of function
-export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: UploadOptions): Promise<boolean> {
+export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: UploadOptions): Promise<Response | AbortError | TimeoutError> {
 	const override = options.override || false;
 	const previews = options.previews || [];
 
-	if (override) {
-		log.info('Overriding GraphQL schema...');
-	} else {
-		log.info('Updating GraphQL schema...');
-	}
-
-	const res = await fetch('https://graphql.fauna.com/import' + (override ? '?mode=override' : ''), {
+	const query = fetch('https://graphql.fauna.com/import' + (override ? '?mode=override' : ''), {
 		body: schema,
 		method: 'POST',
 		headers: {
@@ -27,21 +19,18 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 			'Content-Type':     'text/plain',
 			'X-Schema-Preview': previews.join(),
 		},
-	}).catch(log.error);
+	});
 
-	if (res === undefined) {
-		return false;
-	}
-	if (!res.ok) {
-		log.error(await res.text());
-		return false;
+	let response;
+	try {
+		response = await query;
+	} catch(error) {
+		return error;
 	}
 
-	log.success('GraphQL schema updated');
 	if (override) {
-		log.info('Waiting for the data to be removed...');
 		wait(90 * 1000);
 	}
 
-	return true;
+	return response;
 }
