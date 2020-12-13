@@ -1,7 +1,7 @@
 import { fetch } from 'fetch-h2';
 
 export async function typeExists(secret: string, typeName: string | RegExp): Promise<boolean | undefined> {
-	const data = await queryGraphql(secret, '{ __schema { types { name } } }');
+	const data = await graphql(secret, '{ __schema { types { name } } }');
 	if (!data || !data.__schema || !data.__schema.types) {
 		return undefined;
 	}
@@ -11,7 +11,7 @@ export async function typeExists(secret: string, typeName: string | RegExp): Pro
 	});
 }
 
-async function queryGraphql(secret: string, query: string): Promise<any | undefined> {
+async function graphql(secret: string, query: string): Promise<any | undefined> {
 	const response = await fetch('https://graphql.fauna.com/graphql', {
 		method:  'POST',
 		headers: { Authorization: `Bearer ${secret}` },

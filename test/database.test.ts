@@ -1,23 +1,21 @@
-import { wait } from '../src/utils';
-
-import { Database } from './helpers/database';
-import { adminToken } from './helpers/token';
-
-import { FaunaQueryResult } from '../src/types';
 import { createFaunaClient } from '../src/utils/client';
+
+import { adminToken } from './helpers/token';
+import { Database } from './helpers/database';
+
 import { uploadData } from '../src/lib/data';
 // import { uploadResources } from '../src/lib/resources';
+import { FaunaQueryResult } from '../src/types';
 
-const client    = createFaunaClient(adminToken);
 const timestamp = '' + Date.now();
 
-// Setup a new database for the tests
+// Create a new admin client for the test database
+const client = createFaunaClient(adminToken);
+
+// Setup a new child database for the tests
 let db: Database;
 beforeAll(async () => { db = await Database.create(`fauna-upload-test-${timestamp}`, client); });
 afterAll(() => db.destroy());
-
-// Wait a little bit between each test to avoid flooding the database service
-beforeEach(() => wait(500));
 
 test("upload new data", async () => { // {{{
 
