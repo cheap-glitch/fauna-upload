@@ -2,19 +2,15 @@ import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
 import { FaunaQueryResult } from '../src/types';
-import { createFaunaClient } from '../src/lib/client';
 import { uploadData } from '../src/lib/data';
 // import { uploadResources } from '../src/lib/resources';
 
 const timestamp = '' + Date.now();
 
-// Create a new admin client for the test database
-const client = createFaunaClient(adminSecret);
-
 // Setup a new child database for the tests
 let db: Database;
-beforeAll(async () => { db = await Database.create(`fauna-upload-test-${timestamp}`, client); });
-afterAll(() => db.destroy());
+beforeAll(async () => { db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`); });
+afterAll(() => db.destroy(adminSecret));
 
 test("upload new data", async () => { // {{{
 
@@ -27,7 +23,7 @@ test("upload new data", async () => { // {{{
 	}
 
 	// Action
-	const reponse = await uploadData(client, [{
+	const reponse = await uploadData(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',
@@ -54,7 +50,7 @@ test("update existing data", async () => { // {{{
 	}
 
 	// Action
-	const reponse = await uploadData(client, [{
+	const reponse = await uploadData(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',

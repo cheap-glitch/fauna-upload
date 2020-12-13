@@ -1,10 +1,13 @@
 import { Client as FaunaClient, Expr as FaunaExpr, query as q } from 'faunadb';
 
+import { createFaunaClient } from '../../src/lib/client';
+
 type FaunaIndexTerm   = Record<string, Array<string>>;
 type FaunaIndexParams = Record<string, boolean | string | Array<FaunaIndexTerm>>;
 
 export class Database {
-	name: string;
+	private name:   string;
+	private secret: string;
 	private client: FaunaClient;
 
 	async documentHasProperty(index: string, key: string, prop: string): Promise<boolean> {
@@ -44,32 +47,46 @@ export class Database {
 		await this.query(q.CreateCollection({ name }));
 	}
 
-	async destroy(): Promise<void> {
-		await this.query(q.Delete(q.Database(this.name)));
+	async destroy(adminSecret: string): Promise<void> {
+		await queryClient(createFaunaClient(adminSecret), q.Do(
+			q.Delete(q.Select(['ref'], q.KeyFromSecret(this.secret))),
+			q.Delete(q.Database(this.name))
+		));
 	}
 
-	static async create(name: string, client: FaunaClient): Promise<Database> {
-		const db = new Database(name, client);
-		await db.query(q.CreateDatabase({ name }));
+	getName():   string      { return this.name;   }
+	getSecret(): string      { return this.secret; }
+	getClient(): FaunaClient { return this.client; }
 
-		return db;
+	private async query(query: FaunaExpr): Promise<any> {
+		return await queryClient(this.client, query);
 	}
 
-	async query(query: FaunaExpr): Promise<any> {
-		let response;
-		try {
-			response = await this.client.query(query);
-		} catch (error) {
-			console.error(error);
+	static async create(adminSecret: string, name: string): Promise<Database> {
+		const adminClient = createFaunaClient(adminSecret);
 
-			return undefined;
-		}
+		const { ref    } = await queryClient(adminClient, q.CreateDatabase({ name }));
+		const { secret } = await queryClient(adminClient, q.CreateKey({ database: ref, role: 'server' }));
 
-		return response as any;
+		return new Database(name, secret);
 	}
 
-	private constructor(name: string, client: FaunaClient) {
+	private constructor(name: string, secret: string) {
 		this.name   = name;
-		this.client = client;
+		this.secret = secret;
+		this.client = createFaunaClient(this.secret)
 	}
+}
+
+async function queryClient(client: FaunaClient, query: FaunaExpr): Promise<any> {
+	let response;
+	try {
+		response = await client.query(query);
+	} catch (error) {
+		console.error(error);
+
+		return undefined;
+	}
+
+	return response as any;
 }
