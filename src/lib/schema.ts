@@ -29,7 +29,7 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 	}
 
 	if (override) {
-		wait(90 * 1000);
+		await wait(60 * 1000);
 	}
 
 	return response;
