@@ -1,4 +1,4 @@
-import { fetch, Response, AbortError, TimeoutError } from 'fetch-h2';
+import { fetch, Response } from 'fetch-h2';
 
 import { wait } from '../utils';
 
@@ -7,7 +7,7 @@ interface UploadOptions {
 	previews?: Array<string>
 }
 
-export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: UploadOptions): Promise<Response | AbortError | TimeoutError> {
+export async function uploadSchema(secret: string, schema: NodeJS.ReadableStream, options: UploadOptions): Promise<Response | Error> {
 	const override = options.override || false;
 	const previews = options.previews || [];
 
@@ -25,7 +25,12 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 	try {
 		response = await query;
 	} catch(error) {
-		return error;
+		console.error(error);
+		return new Error(JSON.stringify(error, null, 2));
+	}
+
+	if (!response.ok) {
+		return new Error(await response.text());
 	}
 
 	if (override) {
