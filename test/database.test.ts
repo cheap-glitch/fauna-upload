@@ -1,7 +1,9 @@
+import { errors as FaunaErrors } from 'faunadb';
+import { FaunaQueryResult } from '../src/types';
+
 import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
-import { FaunaQueryResult } from '../src/types';
 import { uploadData } from '../src/lib/data';
 // import { uploadResources } from '../src/lib/resources';
 
@@ -65,5 +67,20 @@ test("update existing data", async () => { // {{{
 	// Tests
 	expect(reponse).toEqual([[FaunaQueryResult.Updated]]);
 	await expect(db.documentHasProperty('users_keys', timestamp, 'updated')).resolves.toBe(true);
+
+}); // }}}
+
+test("error while uploading data", async () => { // {{{
+
+	// Action
+	const reponse = await uploadData(db.getClient(), [{
+		collection: 'missing_collection',
+		index:      'missing_index',
+		key:        'key',
+		documents:  [{ key: timestamp }],
+	}]);
+
+	// Tests
+	expect(reponse).toBeInstanceOf(FaunaErrors.FaunaHTTPError);
 
 }); // }}}
