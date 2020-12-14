@@ -25,6 +25,7 @@
     "build:minify": "terser --compress --mangle toplevel --comments '/^!/' --output build/index.min.js -- build/index.js",
     "build:ts": "tsc-bundle ./tsconfig.json --exportAs commonjs",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
+    "prepublishOnly": "npm run build",
     "test": "jest --useStderr",
     "upload:coverage": "coveralls < .coverage/lcov.info"
   },
