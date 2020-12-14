@@ -1,9 +1,7 @@
-import { Client as FaunaClient, query as q } from 'faunadb';
-import FaunaResponse from 'faunadb/src/types/RequestResult';
-
+import { Client as FaunaClient, query as q, RequestResult as FaunaResponse, errors as FaunaErrors } from 'faunadb';
 import { FaunaResource, FaunaResourceType, FaunaQueryResult } from '../types';
 
-export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaResponse | undefined> {
+export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaResponse | FaunaErrors.FaunaHTTPError> {
 	const [INDEX, CREATE] = (() => {
 		switch (type) {
 			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole    ];
@@ -33,9 +31,7 @@ export async function uploadResources(client: FaunaClient, type: FaunaResourceTy
 	try {
 		reponse = (await query) as FaunaResponse;
 	} catch(error) {
-		console.error(error);
-
-		return undefined;
+		return error;
 	}
 
 	return reponse;

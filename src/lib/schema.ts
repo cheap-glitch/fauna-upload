@@ -25,7 +25,6 @@ export async function uploadSchema(secret: string, schema: NodeJS.ReadableStream
 	try {
 		response = await query;
 	} catch(error) {
-		console.error(error);
 		return new Error(JSON.stringify(error, null, 2));
 	}
 
