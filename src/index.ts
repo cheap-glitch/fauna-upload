@@ -18,7 +18,9 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-export { FaunaResourceType, FaunaQueryResult } from './types';
+export { FaunaResourceType, FaunaDataCollection, FaunaQueryResult } from './types';
+export { FaunaDataUploadResults } from './lib/data';
+
 export { createFaunaClient } from './lib/client';
 export { uploadSchema } from './lib/schema';
 export { uploadData } from './lib/data';
