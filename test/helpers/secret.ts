@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+/* istanbul ignore next */
 if (!process.env.FAUNA_TEST_DB_SECRET) {
 	console.error('Secret for Fauna test database is missing');
 	console.info('To test this module, please create a dummy Fauna database,\n'

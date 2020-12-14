@@ -82,6 +82,7 @@ async function queryClient(client: FaunaClient, query: FaunaExpr): Promise<any> 
 	let response;
 	try {
 		response = await client.query(query);
+	/* istanbul ignore next */
 	} catch (error) {
 		console.error(error);
 
