@@ -9,8 +9,12 @@ const timestamp = '' + Date.now();
 
 // Setup a new child database for the tests
 let db: Database;
-beforeAll(async () => { db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`); });
-afterAll(() => db.destroy(adminSecret));
+beforeAll(async () => {
+	db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`);
+});
+afterAll(async () => {
+	return db.destroy(adminSecret);
+});
 
 test("upload new data", async () => { // {{{
 
@@ -48,6 +52,7 @@ test("update existing data", async () => { // {{{
 	if (!(await db.documentExists('users_keys', timestamp))) {
 		await db.createDocument('users', { key: timestamp });
 	}
+	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 	// Action
 	const reponse = await uploadData(db.getClient(), [{

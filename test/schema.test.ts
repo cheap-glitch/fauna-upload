@@ -11,8 +11,12 @@ const timestamp = '' + Date.now();
 
 // Setup a new child database for the tests
 let db: Database;
-beforeAll(async () => { db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`); });
-afterAll(() => db.destroy(adminSecret));
+beforeAll(async () => {
+	db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`);
+});
+afterAll(async () => {
+	return db.destroy(adminSecret);
+});
 
 test("upload a new schema", async () => { // {{{
 
