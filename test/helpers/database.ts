@@ -1,4 +1,4 @@
-import { Client as FaunaClient, Expr as FaunaExpr, query as q } from 'faunadb';
+import { Expr as FaunaExpr, Client as FaunaClient, query as q } from 'faunadb';
 
 import { createFaunaClient } from '../../src/lib/client';
 
@@ -65,8 +65,8 @@ export class Database {
 	static async create(adminSecret: string, name: string): Promise<Database> {
 		const adminClient = createFaunaClient(adminSecret);
 
-		const { ref    } = await queryClient(adminClient, q.CreateDatabase({ name }));
-		const { secret } = await queryClient(adminClient, q.CreateKey({ database: ref, role: 'admin' }));
+		const { ref    } = await queryClient(adminClient, q.CreateDatabase({ name }))!;
+		const { secret } = await queryClient(adminClient, q.CreateKey({ database: ref, role: 'admin' }))!;
 
 		return new Database(name, secret);
 	}
@@ -78,16 +78,17 @@ export class Database {
 	}
 }
 
-async function queryClient(client: FaunaClient, query: FaunaExpr): Promise<any> {
+async function queryClient(client: FaunaClient, query: FaunaExpr): Promise<any | undefined> {
 	let response;
 	try {
 		response = await client.query(query);
-	/* istanbul ignore next */
 	} catch (error) {
+		/* istanbul ignore next */
 		console.error(error);
 
+		/* istanbul ignore next */
 		return undefined;
 	}
 
-	return response as any;
+	return response;
 }
