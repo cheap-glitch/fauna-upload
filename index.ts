@@ -18,10 +18,10 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
-export { FaunaResourceType, FaunaDataCollection, FaunaQueryResult } from './types';
-export { FaunaDataUploadResults } from './lib/data';
+export { FaunaResourceType, FaunaDataCollection, FaunaQueryResult } from './src/types';
+export { FaunaDataUploadResults } from './src/lib/data';
 
-export { createFaunaClient } from './lib/client';
-export { uploadSchema } from './lib/schema';
-export { uploadData } from './lib/data';
-export { uploadResources } from './lib/resources';
+export { createFaunaClient } from './src/lib/client';
+export { uploadSchema } from './src/lib/schema';
+export { uploadData } from './src/lib/data';
+export { uploadResources } from './src/lib/resources';
