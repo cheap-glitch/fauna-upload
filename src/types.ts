@@ -13,7 +13,7 @@ export interface FaunaDataCollection {
 	collection: string
 	index:      string
 	key:        string
-	documents:  Array<Record<string, any>>
+	documents:  Array<Record<string, unknown>>
 }
 
 export enum FaunaQueryResult {
