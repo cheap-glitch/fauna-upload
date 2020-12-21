@@ -8,8 +8,10 @@
 const { Readable }     = require('stream');
 const { uploadSchema } = require('fauna-upload');
 
+const schema = Readable.from('type Query { allUsers: [User!] }');
+
 require('dotenv').config();
-uploadSchema(Readable.from('type Query { allUsers: [User!] }'), process.env.FAUNA_SECRET, { override: true });
+uploadSchema(schema, process.env.FAUNA_SECRET, { override: true });
 ```
 
 ## License

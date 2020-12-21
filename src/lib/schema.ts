@@ -7,7 +7,7 @@ interface UploadOptions {
 	previews?: Array<string>
 }
 
-export async function uploadSchema(secret: string, schema: NodeJS.ReadableStream, options: UploadOptions): Promise<Response | Error> {
+export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: UploadOptions = {}): Promise<Response | Error> {
 	const override = options.override || false;
 	const previews = options.previews || [];
 
