@@ -21,7 +21,7 @@ afterAll(async () => {
 test("upload a new schema", async () => { // {{{
 
 	// Action
-	const result = await uploadSchema(Readable.from('type Query { allUsers: [User!] }, type User { name: String! }'), db.getSecret(), { override: false });
+	const result = await uploadSchema(Readable.from('type User { name: String! }'), db.getSecret(), { override: false });
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);
@@ -40,7 +40,7 @@ test("update an existing schema", async () => { // {{{
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
 
 	// Action
-	const result = await uploadSchema(Readable.from('type Query { allNewUsers: [NewUser!] }, type NewUser { name: String! }'), db.getSecret(), { override: false });
+	const result = await uploadSchema(Readable.from('type NewUser { name: String! }'), db.getSecret(), { override: false });
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);
@@ -50,6 +50,19 @@ test("update an existing schema", async () => { // {{{
 	// Cleanup
 	if (result instanceof Response) {
 		await result.text();
+	}
+
+}); // }}}
+
+test("error on invalid schema", async () => { // {{{
+
+	// Action
+	const result = await uploadSchema(Readable.from('type MyType { foo: String, bar: Boolean!'), db.getSecret(), { override: false });
+
+	// Tests
+	expect(result).toBeInstanceOf(Error);
+	if (result instanceof Error) {
+		expect(result.message).toMatch(/syntax error/i);
 	}
 
 }); // }}}
