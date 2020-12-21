@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { Readable } from 'stream';
 import { Response } from 'fetch-h2';
 
@@ -53,6 +54,28 @@ test("update an existing schema", async () => { // {{{
 	}
 
 }); // }}}
+
+test("override an existing schema", async () => { // {{{
+
+	// Setup
+	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
+	const timeBefore = Date.now();
+
+	// Action
+	const result = await uploadSchema(Readable.from('type MyCompletelyNewType { foo: Boolean! }'), db.getSecret(), { override: true });
+
+	// Tests
+	expect(Math.floor((Date.now() - timeBefore)/1000)).toBeWithin(60, 120);
+	expect(result).toBeInstanceOf(Response);
+	await expect(typeExists(db.getSecret(), 'MyCompletelyNewType')).resolves.toBe(true);
+	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(false);
+
+	// Cleanup
+	if (result instanceof Response) {
+		await result.text();
+	}
+
+}, 3600*1000); // }}}
 
 test("error on invalid schema", async () => { // {{{
 

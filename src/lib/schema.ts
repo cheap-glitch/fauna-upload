@@ -1,7 +1,5 @@
 import { fetch, Response } from 'fetch-h2';
 
-import { wait } from '../utils';
-
 interface UploadOptions {
 	override?: boolean
 	previews?: Array<string>
@@ -30,10 +28,6 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 
 	if (!response.ok) {
 		return new Error(await response.text());
-	}
-
-	if (override) {
-		await wait(60 * 1000);
 	}
 
 	return response;
