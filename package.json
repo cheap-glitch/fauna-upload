@@ -14,7 +14,10 @@
   "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
   "keywords": [
     "fauna",
-    "faunadb"
+    "faunadb",
+    "fauna-database",
+    "database-management",
+    "database-data-upload"
   ],
   "main": "./build/index.min.js",
   "directories": {
