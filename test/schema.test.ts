@@ -8,12 +8,10 @@ import { typeExists } from './helpers/graphql';
 
 import { uploadSchema } from '../src/lib/schema';
 
-const timestamp = '' + Date.now();
-
 // Setup a new child database for the tests
 let db: Database;
 beforeAll(async () => {
-	db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`);
+	db = await Database.create(adminSecret, `fauna-upload-test-${Date.now()}`);
 });
 afterAll(async () => {
 	return db.destroy(adminSecret);
@@ -55,6 +53,22 @@ test("update an existing schema", async () => { // {{{
 
 }); // }}}
 
+test("enable schema previews", async () => { // {{{
+
+	// Action
+	const result = await uploadSchema(Readable.from('type MyAwesomeType { foo: Int! }'), db.getSecret(), { override: false, previews: ['awesome-schema-preview'] });
+
+	// Tests
+	expect(result).toBeInstanceOf(Response);
+	await expect(typeExists(db.getSecret(), 'MyAwesomeType')).resolves.toBe(true);
+
+	// Cleanup
+	if (result instanceof Response) {
+		await result.text();
+	}
+
+}); // }}}
+
 test("override an existing schema", async () => { // {{{
 
 	// Setup
@@ -75,7 +89,7 @@ test("override an existing schema", async () => { // {{{
 		await result.text();
 	}
 
-}, 3600*1000); // }}}
+}, 180*1000); // }}}
 
 test("error on invalid schema", async () => { // {{{
 
