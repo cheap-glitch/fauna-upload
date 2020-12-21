@@ -1,6 +1,6 @@
 {
   "name": "fauna-upload",
-  "description": "Upload resources and data to FaunaDB with ease.",
+  "description": "A Node module to upload schemas, resources and data to a Fauna database.",
   "version": "0.0.1",
   "license": "ISC",
   "repository": {

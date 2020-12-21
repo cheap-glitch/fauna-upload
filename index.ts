@@ -1,7 +1,7 @@
 /*!
  * fauna-upload
  *
- * Upload resources and data to FaunaDB with ease.
+ * A Node module to upload schemas, resources and data to a Fauna database.
  *
  * Copyright (c) 2020-present, cheap glitch
  *
