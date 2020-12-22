@@ -1,16 +1,7 @@
-import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
-const timestamp = '' + Date.now();
-
-// Setup a new child database for the tests
-let db: Database;
-beforeAll(async () => {
-	db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`);
-});
-afterAll(async () => {
-	return db.destroy(adminSecret);
-});
+declare const db: Database;
+declare const timestamp: string;
 
 test("get database name", async () => { // {{{
 

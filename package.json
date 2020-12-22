@@ -39,6 +39,7 @@
   },
   "jest": {
     "preset": "ts-jest",
+    "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "jest-extended",
       "<rootDir>/test/setup.ts"

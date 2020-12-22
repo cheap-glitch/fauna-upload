@@ -2,25 +2,17 @@ import 'jest-extended';
 import { Readable } from 'stream';
 import { Response } from 'fetch-h2';
 
-import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 import { typeExists } from './helpers/graphql';
 
 import { uploadSchema } from '../src/lib/schema';
 
-// Setup a new child database for the tests
-let db: Database;
-beforeAll(async () => {
-	db = await Database.create(adminSecret, `fauna-upload-test-${Date.now()}`);
-});
-afterAll(async () => {
-	return db.destroy(adminSecret);
-});
+declare const db: Database;
 
 test("upload a new schema", async () => { // {{{
 
 	// Action
-	const result = await uploadSchema(Readable.from('type User { name: String! }'), db.getSecret(), { override: false });
+	const result = await uploadSchema(Readable.from('type User { name: String! }'), db.getSecret());
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);

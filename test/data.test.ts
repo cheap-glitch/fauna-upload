@@ -1,22 +1,12 @@
 import { errors as FaunaErrors } from 'faunadb';
-import { FaunaQueryResult } from '../src/types';
 
-import { adminSecret } from './helpers/secret';
 import { Database } from './helpers/database';
 
+import { FaunaQueryResult } from '../src/types';
 import { uploadData } from '../src/lib/data';
-// import { uploadResources } from '../src/lib/resources';
 
-const timestamp = '' + Date.now();
-
-// Setup a new child database for the tests
-let db: Database;
-beforeAll(async () => {
-	db = await Database.create(adminSecret, `fauna-upload-test-${timestamp}`);
-});
-afterAll(async () => {
-	return db.destroy(adminSecret);
-});
+declare const db: Database;
+declare const timestamp: string;
 
 test("upload new data", async () => { // {{{
 
@@ -29,7 +19,7 @@ test("upload new data", async () => { // {{{
 	}
 
 	// Action
-	const reponse = await uploadData(db.getClient(), [{
+	const result = await uploadData(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',
@@ -37,7 +27,7 @@ test("upload new data", async () => { // {{{
 	}]);
 
 	// Tests
-	expect(reponse).toEqual([[FaunaQueryResult.Created]]);
+	expect(result).toEqual([[FaunaQueryResult.Created]]);
 	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 }); // }}}
@@ -57,7 +47,7 @@ test("update existing data", async () => { // {{{
 	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 	// Action
-	const reponse = await uploadData(db.getClient(), [{
+	const result = await uploadData(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',
@@ -65,7 +55,7 @@ test("update existing data", async () => { // {{{
 	}]);
 
 	// Tests
-	expect(reponse).toEqual([[FaunaQueryResult.Updated]]);
+	expect(result).toEqual([[FaunaQueryResult.Updated]]);
 	await expect(db.documentHasProperty('users_keys', timestamp, 'updated')).resolves.toBe(true);
 
 }); // }}}
@@ -73,7 +63,7 @@ test("update existing data", async () => { // {{{
 test("error while uploading data", async () => { // {{{
 
 	// Action
-	const reponse = await uploadData(db.getClient(), [{
+	const result = await uploadData(db.getClient(), [{
 		collection: 'missing_collection',
 		index:      'missing_index',
 		key:        'key',
@@ -81,6 +71,6 @@ test("error while uploading data", async () => { // {{{
 	}]);
 
 	// Tests
-	expect(reponse).toBeInstanceOf(FaunaErrors.FaunaHTTPError);
+	expect(result).toBeInstanceOf(FaunaErrors.FaunaHTTPError);
 
 }); // }}}
