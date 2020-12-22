@@ -1,7 +1,7 @@
-import { Client as FaunaClient, query as q, RequestResult as FaunaResponse, errors as FaunaErrors } from 'faunadb';
-import { FaunaResource, FaunaResourceType, FaunaQueryResult } from '../types';
+import { Client as FaunaClient, query as q, errors as FaunaErrors } from 'faunadb';
+import { FaunaResource, FaunaResourceType, FaunaQueryResult, FaunaUploadResults } from '../types';
 
-export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaResponse | FaunaErrors.FaunaHTTPError> {
+export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
 	const [INDEX, CREATE] = (() => {
 		switch (type) {
 			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole    ];
@@ -11,7 +11,7 @@ export async function uploadResources(client: FaunaClient, type: FaunaResourceTy
 		}
 	})();
 
-	const query = client.query(q.Foreach(resources, q.Lambda('resource', q.Let(
+	const query = client.query(q.Map(resources, q.Lambda('resource', q.Let(
 		{
 			name: q.Select(['name'], q.Var('resource')),
 		},
@@ -27,12 +27,12 @@ export async function uploadResources(client: FaunaClient, type: FaunaResourceTy
 		)
 	))));
 
-	let reponse: FaunaResponse;
+	let response;
 	try {
-		reponse = (await query) as FaunaResponse;
+		response = (await query) as FaunaUploadResults;
 	} catch(error) {
 		return error;
 	}
 
-	return reponse;
+	return response;
 }
