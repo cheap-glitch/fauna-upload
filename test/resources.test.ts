@@ -6,7 +6,6 @@ import { uploadResources } from '../src/lib/resources';
 import { FaunaResourceType, FaunaQueryResult } from '../src/types';
 
 declare const db: Database;
-// declare const timestamp: string;
 
 test("create a new function", async () => { // {{{
 
@@ -23,6 +22,22 @@ test("create a new function", async () => { // {{{
 
 }); // }}}
 
-test.todo("update an existing function");//, async () => { // {{{
+test("update an existing function", async () => { // {{{
 
-// }); // }}}
+	// Setup
+	if (!(await db.functionExists('greet_person'))) {
+		await db.createFunction('greet_person', q.Query(q.Lambda('name', q.Concat(['Hello, ', q.Var('name'), '!']))));
+	}
+
+	// Action
+	const result = await uploadResources(db.getClient(), FaunaResourceType.Function, [{
+		name: 'greet_person',
+		body: q.Query(q.Lambda('name', q.Concat(['Bonjour, ', q.Var('name'), '!']))),
+	}]);
+
+	// Tests
+	expect(result).toEqual([FaunaQueryResult.Updated]);
+	await expect(db.functionExists('greet_person')).resolves.toBe(true);
+	await expect(db.callFunction('greet_person', 'Paul Éluard')).resolves.toBe('Bonjour, Paul Éluard!');
+
+}); // }}}

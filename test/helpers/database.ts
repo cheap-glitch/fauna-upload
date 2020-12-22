@@ -1,4 +1,4 @@
-import { ExprArg, Client as FaunaClient, query as q } from 'faunadb';
+import { Expr as FaunaExpression, ExprArg as FaunaExpressionArg, Client as FaunaClient, query as q } from 'faunadb';
 
 import { createFaunaClient } from '../../src/lib/client';
 
@@ -10,7 +10,7 @@ export class Database {
 	private secret: string;
 	private client: FaunaClient;
 
-	async callFunction(name: string, ...args: Array<ExprArg>): Promise<unknown> {
+	async callFunction(name: string, ...args: Array<FaunaExpressionArg>): Promise<unknown> {
 		return await this.client.query(q.Call(q.Function(name), ...args));
 	}
 
@@ -32,6 +32,10 @@ export class Database {
 
 	async collectionExists(name: string): Promise<boolean> {
 		return !!(await this.client.query(q.Exists(q.Collection(name))));
+	}
+
+	async createFunction(name: string, body: FaunaExpression): Promise<void> {
+		await this.client.query(q.CreateFunction({ name, body }));
 	}
 
 	async createDocument(collection: string, data: Record<string, boolean | number | string>): Promise<void> {
