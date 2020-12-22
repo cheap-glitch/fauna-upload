@@ -1,37 +1,15 @@
 import { fetch } from 'fetch-h2';
 
-export async function typeExists(secret: string, typeName: string | RegExp): Promise<boolean | undefined> {
-	const data = await graphql(secret, '{ __schema { types { name } } }');
-
-	/* istanbul ignore next */
-	if (!data || !data.__schema || !data.__schema.types) {
-		console.error(new Error('Missing schema information in response data: ' + JSON.stringify(data, null, 2)));
-
-		return undefined;
-	}
-
-	return data.__schema.types.some((type: Record<string, string>) => {
-		return (typeof typeName == 'string') ? typeName == type.name : typeName.test(type.name);
-	});
+export async function typeExists(secret: string, typeName: string): Promise<boolean | undefined> {
+	return (await graphql(secret, '{ __schema { types { name } } }')).__schema.types.some((type: Record<string, string>) => type.name == typeName);
 }
 
-async function graphql(secret: string, query: string): Promise<any | undefined> {
+async function graphql(secret: string, query: string): Promise<any> {
 	const response = await fetch('https://graphql.fauna.com/graphql', {
 		method:  'POST',
 		headers: { Authorization: `Bearer ${secret}` },
 		json:    { query },
 	});
 
-	let json;
-	try {
-		json = await response.json();
-	} catch (error) {
-		/* istanbul ignore next */
-		console.error(error);
-
-		/* istanbul ignore next */
-		return undefined;
-	}
-
-	return json.data || undefined;
+	return (await response.json()).data;
 }
