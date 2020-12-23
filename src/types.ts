@@ -1,8 +1,4 @@
-import { values, Expr as FaunaExpression } from 'faunadb';
-
-type FaunaQuery      = values.Query;
-type FaunaReference  = values.Ref;
-type FaunaActionName = 'create' | 'delete' | 'read' | 'write' | 'history_read' | 'history_write' | 'unrestricted_read' | 'call';
+import { Expr as FaunaExpression } from 'faunadb';
 
 export enum FaunaResourceType {
 	Role     = 'role',
@@ -20,18 +16,20 @@ export interface FaunaRole {
 }
 
 interface FaunaPrivilege {
-	resource:     FaunaReference
-	actions:      Record<FaunaActionName, boolean | FaunaExpression>
+	resource:     FaunaExpression
+	actions:      Partial<Record<FaunaActionName, boolean | FaunaExpression>>
 }
 
+type FaunaActionName = 'create' | 'delete' | 'read' | 'write' | 'history_read' | 'history_write' | 'unrestricted_read' | 'call';
+
 interface FaunaMembership {
-	resource:     FaunaReference
-	predicate?:   FaunaQuery
+	resource:     FaunaExpression
+	predicate?:   FaunaExpression
 }
 
 export interface FaunaIndex {
 	name:         string
-	source:       FaunaReference | Array<FaunaSourceObject>
+	source:       FaunaExpression | Array<FaunaSourceObject>
 	terms?:       Array<FaunaTermObject>
 	values?:      Array<FaunaValueObject>
 	unique?:      boolean
@@ -41,8 +39,8 @@ export interface FaunaIndex {
 }
 
 interface FaunaSourceObject {
-	collection:   FaunaReference | '_'
-	fields:       Record<string, FaunaQuery>
+	collection:   FaunaExpression | '_'
+	fields:       Record<string, FaunaExpression>
 }
 
 interface FaunaTermObject {
@@ -59,7 +57,7 @@ interface FaunaValueObject {
 export interface FaunaFunction {
 	name:         string
 	body:         FaunaExpression
-	role?:        string | FaunaReference
+	role?:        string | FaunaExpression
 	data?:        Record<string, unknown>
 }
 
