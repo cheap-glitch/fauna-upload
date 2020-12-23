@@ -41,3 +41,53 @@ test("update an existing function", async () => { // {{{
 	await expect(db.callFunction('greet_person', 'Paul Éluard')).resolves.toBe('Bonjour, Paul Éluard!');
 
 }); // }}}
+
+test("create a new role", async () => { // {{{
+
+	// Setup
+	if (!(await db.collectionExists('my_collection'))) {
+		await db.createCollection('my_collection');
+	}
+
+	// Action
+	const result = await uploadResources(db.getClient(), FaunaResourceType.Role, [{
+		name: 'my_role',
+		privileges: [{
+			resource: q.Collection('my_collection'),
+			actions: {
+				read:   true,
+				create: true,
+				delete: false,
+			}
+		}]
+	}]);
+
+	// Tests
+	expect(result).toEqual([FaunaQueryResult.Created]);
+	await expect(db.roleExists('my_role')).resolves.toBe(true);
+
+}); // }}}
+
+test("update an existing role", async () => { // {{{
+
+	// Setup
+	await expect(db.collectionExists('my_collection')).resolves.toBe(true);
+	await expect(db.roleExists('my_role')).resolves.toBe(true);
+
+	// Action
+	const result = await uploadResources(db.getClient(), FaunaResourceType.Role, [{
+		name: 'my_role',
+		privileges: [{
+			resource: q.Collection('my_collection'),
+			actions: {
+				read:   true,
+				create: true,
+				delete: true,
+			}
+		}]
+	}]);
+
+	// Tests
+	expect(result).toEqual([FaunaQueryResult.Updated]);
+
+}); // }}}

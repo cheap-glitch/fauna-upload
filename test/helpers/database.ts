@@ -10,32 +10,36 @@ export class Database {
 	private secret: string;
 	private client: FaunaClient;
 
-	async callFunction(name: string, ...args: Array<FaunaExpressionArg>): Promise<unknown> {
-		return await this.client.query(q.Call(q.Function(name), ...args));
-	}
-
-	async functionExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Function(name))));
-	}
-
-	async documentHasProperty(index: string, key: string, prop: string): Promise<boolean> {
-		return !!(await this.client.query(q.Select(['data', prop], q.Get(q.Match(q.Index(index), key)), undefined)));
+	async collectionExists(name: string): Promise<boolean> {
+		return !!(await this.client.query(q.Exists(q.Collection(name))));
 	}
 
 	async documentExists(index: string, key: string): Promise<boolean> {
 		return !!(await this.client.query(q.Exists(q.Match(q.Index(index), key))));
 	}
 
+	async documentHasProperty(index: string, key: string, prop: string): Promise<boolean> {
+		return !!(await this.client.query(q.Select(['data', prop], q.Get(q.Match(q.Index(index), key)), undefined)));
+	}
+
 	async indexExists(name: string): Promise<boolean> {
 		return !!(await this.client.query(q.Exists(q.Index(name))));
 	}
 
-	async collectionExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Collection(name))));
+	async functionExists(name: string): Promise<boolean> {
+		return !!(await this.client.query(q.Exists(q.Function(name))));
 	}
 
-	async createFunction(name: string, body: FaunaExpression): Promise<void> {
-		await this.client.query(q.CreateFunction({ name, body }));
+	async roleExists(name: string): Promise<boolean> {
+		return !!(await this.client.query(q.Exists(q.Role(name))));
+	}
+
+	async callFunction(name: string, ...args: Array<FaunaExpressionArg>): Promise<unknown> {
+		return await this.client.query(q.Call(q.Function(name), ...args));
+	}
+
+	async createCollection(name: string): Promise<void> {
+		await this.client.query(q.CreateCollection({ name }));
 	}
 
 	async createDocument(collection: string, data: Record<string, boolean | number | string>): Promise<void> {
@@ -55,8 +59,8 @@ export class Database {
 		));
 	}
 
-	async createCollection(name: string): Promise<void> {
-		await this.client.query(q.CreateCollection({ name }));
+	async createFunction(name: string, body: FaunaExpression): Promise<void> {
+		await this.client.query(q.CreateFunction({ name, body }));
 	}
 
 	async destroy(adminSecret: string): Promise<void> {
