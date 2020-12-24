@@ -1,17 +1,14 @@
 import { Client as FaunaClient, query as q, errors as FaunaErrors } from 'faunadb';
-import { FaunaDataCollection, FaunaQueryResult } from '../types';
+import { FaunaDataCollection, FaunaQueryResult, FaunaUploadResults } from '../types';
 
-export type FaunaDataUploadResults = Array<Array<FaunaQueryResult>>;
-
-export async function uploadData(client: FaunaClient, resources: Array<FaunaDataCollection>): Promise<FaunaDataUploadResults | FaunaErrors.FaunaHTTPError> {
-	// @TODO(1.1.0): add support for creating connections between documents
-	const query = client.query(q.Map(resources, q.Lambda('resource', q.Let(
+export async function uploadData(client: FaunaClient, collections: Array<FaunaDataCollection>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
+	const query = client.query(q.Map(collections, q.Lambda('collection', q.Let(
 		{
-			collection: q.Select(['collection'], q.Var('resource')),
-			index:      q.Select(['index'],      q.Var('resource')),
-			key:        q.Select(['key'],        q.Var('resource')),
+			name:  q.Select(['collection'], q.Var('collection')),
+			index: q.Select(['index'],      q.Var('collection')),
+			key:   q.Select(['key'],        q.Var('collection')),
 		},
-		q.Map(q.Select(['documents'], q.Var('resource')), q.Lambda('document', q.Let(
+		q.Map(q.Select(['documents'], q.Var('collection')), q.Lambda('document', q.Let(
 			{
 				match: q.Match(q.Var('index'), q.Select([q.Var('key')], q.Var('document')))
 			},
@@ -21,7 +18,7 @@ export async function uploadData(client: FaunaClient, resources: Array<FaunaData
 					FaunaQueryResult.Updated
 				),
 				q.Do(
-					q.Create(q.Var('collection'), { data: q.Var('document') }),
+					q.Create(q.Var('name'), { data: q.Var('document') }),
 					FaunaQueryResult.Created
 				)
 			)
@@ -29,11 +26,8 @@ export async function uploadData(client: FaunaClient, resources: Array<FaunaData
 	))));
 
 	let response;
-	try {
-		response = (await query) as FaunaDataUploadResults;
-	} catch(error) {
-		return error;
-	}
+	try { response = await query; } catch(error) { return error; }
 
-	return response;
+	return response as FaunaUploadResults;
 }
+
