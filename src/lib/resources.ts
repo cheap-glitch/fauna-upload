@@ -1,13 +1,12 @@
 import { Client as FaunaClient, query as q, errors as FaunaErrors } from 'faunadb';
 import { FaunaResource, FaunaResourceType, FaunaQueryResult, FaunaUploadResults } from '../types';
 
-export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaUploadResults | FaunaErrors.InvalidValue | FaunaErrors.FaunaHTTPError> {
+export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
 	const [INDEX, CREATE] = (() => {
 		switch (type) {
 			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole    ];
 			case FaunaResourceType.Index:    return [q.Index,    q.CreateIndex   ];
 			case FaunaResourceType.Function: return [q.Function, q.CreateFunction];
-			default: throw TypeError(`Unknown resource type '${type}'`);
 		}
 	})();
 
