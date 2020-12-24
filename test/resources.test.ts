@@ -1,4 +1,4 @@
-import { query as q } from 'faunadb';
+import { query as q, errors as FaunaErrors } from 'faunadb';
 
 import { Database } from './helpers/database';
 
@@ -89,5 +89,50 @@ test("update an existing role", async () => { // {{{
 
 	// Tests
 	expect(result).toEqual([FaunaQueryResult.Updated]);
+
+}); // }}}
+
+test("create a new index", async () => { // {{{
+
+	// Setup
+	if (!(await db.collectionExists('spaceships'))) {
+		await db.createCollection('spaceships');
+	}
+
+	// Action
+	const result = await uploadResources(db.getClient(), FaunaResourceType.Index, [{
+		name:   'spaceship_names',
+		source: q.Collection('spaceships'),
+		unique: true,
+		terms:  [{ field: ['data', 'name'] }]
+	}]);
+
+	// Tests
+	expect(result).toEqual([FaunaQueryResult.Created]);
+	await expect(db.indexExists('spaceship_names')).resolves.toBe(true);
+
+}); // }}}
+
+test("error when updating an existing index", async () => { // {{{
+
+	// Setup
+	await expect(db.collectionExists('spaceships')).resolves.toBe(true);
+	await expect(db.indexExists('spaceship_names')).resolves.toBe(true);
+
+	// Action
+	const result = await uploadResources(db.getClient(), FaunaResourceType.Index, [{
+		name:   'spaceship_names',
+		source: q.Collection('spaceships'),
+		unique: false,
+		terms:  [{ field: ['data', 'name'] }],
+		values: [{ field: ['data', 'name'] , reverse: false }],
+	}]);
+
+	// Tests
+	expect(result).toBeInstanceOf(FaunaErrors.FaunaHTTPError);
+	if (result instanceof FaunaErrors.FaunaHTTPError) {
+		expect(result.message).toBe('validation failed');
+		expect(result.requestResult.responseRaw).toMatch('Index sources, terms, values, and partition count may not be updated');
+	}
 
 }); // }}}
