@@ -1,3 +1,5 @@
+import { query as q } from 'faunadb';
+
 import { Database } from './helpers/database';
 
 declare const db: Database;
@@ -36,5 +38,16 @@ test("create a document", async () => { // {{{
 
 	// Tests
 	await expect(db.documentExists('my_index', 'my_value')).resolves.toBe(true);
+
+}); // }}}
+
+test("create a function", async () => { // {{{
+
+	// Action
+	await db.createFunction('my_function', q.Query(q.Lambda([], 'お早う, 世界!')));
+
+	// Tests
+	await expect(db.functionExists('my_function')).resolves.toBe(true);
+	await expect(db.callFunction('my_function')).resolves.toBe('お早う, 世界!');
 
 }); // }}}
