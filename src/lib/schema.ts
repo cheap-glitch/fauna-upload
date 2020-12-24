@@ -1,11 +1,6 @@
 import { fetch, Response } from 'fetch-h2';
 
-interface UploadOptions {
-	override?: boolean
-	previews?: Array<string>
-}
-
-export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: UploadOptions = {}): Promise<Response | Error> {
+export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: { override?: boolean, previews?: Array<string> } = {}): Promise<Response | Error> {
 	const override = options.override || false;
 	const previews = options.previews || [];
 
@@ -23,6 +18,7 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 	try {
 		response = await query;
 	} catch(error) {
+		/* istanbul ignore next */
 		return new Error(JSON.stringify(error, null, 2));
 	}
 
