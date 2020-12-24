@@ -43,16 +43,8 @@ interface FaunaSourceObject {
 	fields:       Record<string, FaunaExpression>
 }
 
-interface FaunaTermObject {
-	field:        Array<string>
-	binding:      string
-}
-
-interface FaunaValueObject {
-	field:        Array<string>
-	binding:      string
-	reverse?:     boolean
-}
+type FaunaTermObject  = { binding?: never, field: Array<string> } | { binding: string, field?: never };
+type FaunaValueObject = FaunaTermObject & { reverse?: boolean }
 
 export interface FaunaFunction {
 	name:         string
