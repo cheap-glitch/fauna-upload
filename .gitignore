@@ -1,6 +1,6 @@
 # npm
-.npmrc
-node_modules
+/node_modules/
+/.npmrc
 npm-debug.log
 
 # Code coverage
