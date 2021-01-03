@@ -1,7 +1,7 @@
 {
   "name": "fauna-upload",
   "description": "A Node module to upload schemas, resources and data to a Fauna database.",
-  "version": "0.0.1",
+  "version": "0.8.0",
   "license": "ISC",
   "repository": {
     "type": "git",
