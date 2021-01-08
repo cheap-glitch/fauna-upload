@@ -8,7 +8,7 @@ import { uploadData } from '../src/lib/data';
 declare const db: Database;
 declare const timestamp: string;
 
-test("upload new data", async () => { // {{{
+test('upload new data', async () => { // {{{
 
 	// Setup
 	if (!(await db.collectionExists('users'))) {
@@ -28,11 +28,12 @@ test("upload new data", async () => { // {{{
 
 	// Tests
 	expect(result).toEqual([[FaunaQueryResult.Created]]);
+
 	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 }); // }}}
 
-test("update existing data", async () => { // {{{
+test('update existing data', async () => { // {{{
 
 	// Setup
 	if (!(await db.collectionExists('users'))) {
@@ -56,11 +57,12 @@ test("update existing data", async () => { // {{{
 
 	// Tests
 	expect(result).toEqual([[FaunaQueryResult.Updated]]);
+
 	await expect(db.documentHasProperty('users_keys', timestamp, 'updated')).resolves.toBe(true);
 
 }); // }}}
 
-test("error while uploading data", async () => { // {{{
+test('error while uploading data', async () => { // {{{
 
 	// Action
 	const result = await uploadData(db.getClient(), [{

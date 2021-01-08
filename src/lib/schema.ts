@@ -19,7 +19,7 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 		response = await query;
 	} catch(error) {
 		/* istanbul ignore next */
-		return new Error(JSON.stringify(error, null, 2));
+		return new Error(JSON.stringify(error, undefined, 2));
 	}
 
 	if (!response.ok) {

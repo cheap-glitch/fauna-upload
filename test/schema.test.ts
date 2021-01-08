@@ -9,13 +9,14 @@ import { uploadSchema } from '../src/lib/schema';
 
 declare const db: Database;
 
-test("upload a new schema", async () => { // {{{
+test('upload a new schema', async () => { // {{{
 
 	// Action
 	const result = await uploadSchema(Readable.from('type User { name: String! }'), db.getSecret());
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);
+
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
 
 	// Cleanup
@@ -25,7 +26,7 @@ test("upload a new schema", async () => { // {{{
 
 }); // }}}
 
-test("update an existing schema", async () => { // {{{
+test('update an existing schema', async () => { // {{{
 
 	// Setup
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
@@ -35,6 +36,7 @@ test("update an existing schema", async () => { // {{{
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);
+
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
 	await expect(typeExists(db.getSecret(), 'NewUser')).resolves.toBe(true);
 
@@ -45,13 +47,14 @@ test("update an existing schema", async () => { // {{{
 
 }); // }}}
 
-test("enable schema previews", async () => { // {{{
+test('enable schema previews', async () => { // {{{
 
 	// Action
 	const result = await uploadSchema(Readable.from('type MyAwesomeType { foo: Int! }'), db.getSecret(), { override: false, previews: ['awesome-schema-preview'] });
 
 	// Tests
 	expect(result).toBeInstanceOf(Response);
+
 	await expect(typeExists(db.getSecret(), 'MyAwesomeType')).resolves.toBe(true);
 
 	// Cleanup
@@ -61,7 +64,7 @@ test("enable schema previews", async () => { // {{{
 
 }); // }}}
 
-test("override an existing schema", async () => { // {{{
+test('override an existing schema', async () => { // {{{
 
 	// Setup
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(true);
@@ -73,6 +76,7 @@ test("override an existing schema", async () => { // {{{
 	// Tests
 	expect(Math.floor((Date.now() - timeBefore)/1000)).toBeWithin(60, 120);
 	expect(result).toBeInstanceOf(Response);
+
 	await expect(typeExists(db.getSecret(), 'MyCompletelyNewType')).resolves.toBe(true);
 	await expect(typeExists(db.getSecret(), 'User')).resolves.toBe(false);
 
@@ -83,15 +87,13 @@ test("override an existing schema", async () => { // {{{
 
 }, 180*1000); // }}}
 
-test("error on invalid schema", async () => { // {{{
+test('error on invalid schema', async () => { // {{{
 
 	// Action
 	const result = await uploadSchema(Readable.from('type MyType { foo: String, bar: Boolean!'), db.getSecret(), { override: false });
 
 	// Tests
 	expect(result).toBeInstanceOf(Error);
-	if (result instanceof Error) {
-		expect(result.message).toMatch(/syntax error/i);
-	}
+	expect(result instanceof Error ? result.message : '').toMatch(/syntax error/i);
 
 }); // }}}

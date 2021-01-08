@@ -5,13 +5,13 @@ import { Database } from './helpers/database';
 declare const db: Database;
 declare const timestamp: string;
 
-test("get database name", async () => { // {{{
+test('get database name', async () => { // {{{
 
 	expect(db.getName()).toBe(`fauna-upload-test-${timestamp}`);
 
 }); // }}}
 
-test("create a collection", async () => { // {{{
+test('create a collection', async () => { // {{{
 
 	// Action
 	await db.createCollection('my_collection');
@@ -21,7 +21,7 @@ test("create a collection", async () => { // {{{
 
 }); // }}}
 
-test("create an index", async () => { // {{{
+test('create an index', async () => { // {{{
 
 	// Action
 	await db.createIndex('my_collection', 'my_index', { terms: [{ field: ['data', 'my_prop'] }] });
@@ -31,7 +31,7 @@ test("create an index", async () => { // {{{
 
 }); // }}}
 
-test("create a document", async () => { // {{{
+test('create a document', async () => { // {{{
 
 	// Action
 	await db.createDocument('my_collection', { my_prop: 'my_value' });
@@ -41,7 +41,7 @@ test("create a document", async () => { // {{{
 
 }); // }}}
 
-test("create a function", async () => { // {{{
+test('create a function', async () => { // {{{
 
 	// Action
 	await db.createFunction('my_function', q.Query(q.Lambda([], 'お早う, 世界!')));

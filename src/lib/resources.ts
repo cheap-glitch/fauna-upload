@@ -4,8 +4,8 @@ import { FaunaResource, FaunaResourceType, FaunaQueryResult, FaunaUploadResults 
 export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
 	const [INDEX, CREATE] = (() => {
 		switch (type) {
-			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole    ];
-			case FaunaResourceType.Index:    return [q.Index,    q.CreateIndex   ];
+			case FaunaResourceType.Role:     return [q.Role,     q.CreateRole];
+			case FaunaResourceType.Index:    return [q.Index,    q.CreateIndex];
 			case FaunaResourceType.Function: return [q.Function, q.CreateFunction];
 		}
 	})();
@@ -27,7 +27,11 @@ export async function uploadResources(client: FaunaClient, type: FaunaResourceTy
 	))));
 
 	let response;
-	try { response = await query; } catch(error) { return error; }
+	try {
+		response = await query;
+	} catch(error) {
+		return error;
+	}
 
 	return response as FaunaUploadResults;
 }

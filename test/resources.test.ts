@@ -7,7 +7,7 @@ import { FaunaResourceType, FaunaQueryResult } from '../src/types';
 
 declare const db: Database;
 
-test("create a new function", async () => { // {{{
+test('create a new function', async () => { // {{{
 
 	// Action
 	const result = await uploadResources(db.getClient(), FaunaResourceType.Function, [{
@@ -17,12 +17,13 @@ test("create a new function", async () => { // {{{
 
 	// Tests
 	expect(result).toEqual([FaunaQueryResult.Created]);
+
 	await expect(db.functionExists('greet_person')).resolves.toBe(true);
 	await expect(db.callFunction('greet_person', 'Batman')).resolves.toBe('Hello, Batman!');
 
 }); // }}}
 
-test("update an existing function", async () => { // {{{
+test('update an existing function', async () => { // {{{
 
 	// Setup
 	if (!(await db.functionExists('greet_person'))) {
@@ -37,12 +38,13 @@ test("update an existing function", async () => { // {{{
 
 	// Tests
 	expect(result).toEqual([FaunaQueryResult.Updated]);
+
 	await expect(db.functionExists('greet_person')).resolves.toBe(true);
 	await expect(db.callFunction('greet_person', 'Paul Éluard')).resolves.toBe('Bonjour, Paul Éluard!');
 
 }); // }}}
 
-test("create a new role", async () => { // {{{
+test('create a new role', async () => { // {{{
 
 	// Setup
 	if (!(await db.collectionExists('my_collection'))) {
@@ -58,17 +60,18 @@ test("create a new role", async () => { // {{{
 				read:   true,
 				create: true,
 				delete: false,
-			}
-		}]
+			},
+		}],
 	}]);
 
 	// Tests
 	expect(result).toEqual([FaunaQueryResult.Created]);
+
 	await expect(db.roleExists('my_role')).resolves.toBe(true);
 
 }); // }}}
 
-test("update an existing role", async () => { // {{{
+test('update an existing role', async () => { // {{{
 
 	// Setup
 	await expect(db.collectionExists('my_collection')).resolves.toBe(true);
@@ -83,8 +86,8 @@ test("update an existing role", async () => { // {{{
 				read:   true,
 				create: true,
 				delete: true,
-			}
-		}]
+			},
+		}],
 	}]);
 
 	// Tests
@@ -92,7 +95,7 @@ test("update an existing role", async () => { // {{{
 
 }); // }}}
 
-test("create a new index", async () => { // {{{
+test('create a new index', async () => { // {{{
 
 	// Setup
 	if (!(await db.collectionExists('spaceships'))) {
@@ -104,16 +107,17 @@ test("create a new index", async () => { // {{{
 		name:   'spaceship_names',
 		source: q.Collection('spaceships'),
 		unique: true,
-		terms:  [{ field: ['data', 'name'] }]
+		terms:  [{ field: ['data', 'name'] }],
 	}]);
 
 	// Tests
 	expect(result).toEqual([FaunaQueryResult.Created]);
+
 	await expect(db.indexExists('spaceship_names')).resolves.toBe(true);
 
 }); // }}}
 
-test("error when updating an existing index", async () => { // {{{
+test('error when updating an existing index', async () => { // {{{
 
 	// Setup
 	await expect(db.collectionExists('spaceships')).resolves.toBe(true);
@@ -130,9 +134,7 @@ test("error when updating an existing index", async () => { // {{{
 
 	// Tests
 	expect(result).toBeInstanceOf(FaunaErrors.FaunaHTTPError);
-	if (result instanceof FaunaErrors.FaunaHTTPError) {
-		expect(result.message).toBe('validation failed');
-		expect(result.requestResult.responseRaw).toMatch('Index sources, terms, values, and partition count may not be updated');
-	}
+	expect(result instanceof FaunaErrors.FaunaHTTPError ? result.message : '').toBe('validation failed');
+	expect(result instanceof FaunaErrors.FaunaHTTPError ? result.requestResult.responseRaw : '').toMatch('Index sources, terms, values, and partition count may not be updated');
 
 }); // }}}

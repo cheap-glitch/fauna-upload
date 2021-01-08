@@ -10,7 +10,7 @@ export async function uploadData(client: FaunaClient, collections: Array<FaunaDa
 		},
 		q.Map(q.Select(['documents'], q.Var('collection')), q.Lambda('document', q.Let(
 			{
-				match: q.Match(q.Var('index'), q.Select([q.Var('key')], q.Var('document')))
+				match: q.Match(q.Var('index'), q.Select([q.Var('key')], q.Var('document'))),
 			},
 			q.If(q.Exists(q.Var('match')),
 				q.Do(
@@ -26,7 +26,11 @@ export async function uploadData(client: FaunaClient, collections: Array<FaunaDa
 	))));
 
 	let response;
-	try { response = await query; } catch(error) { return error; }
+	try {
+		response = await query;
+	} catch(error) {
+		return error;
+	}
 
 	return response as FaunaUploadResults;
 }

@@ -11,27 +11,27 @@ export class Database {
 	private client: FaunaClient;
 
 	async collectionExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Collection(name))));
+		return Boolean(await this.client.query(q.Exists(q.Collection(name))));
 	}
 
 	async documentExists(index: string, key: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Match(q.Index(index), key))));
+		return Boolean(await this.client.query(q.Exists(q.Match(q.Index(index), key))));
 	}
 
 	async documentHasProperty(index: string, key: string, prop: string): Promise<boolean> {
-		return !!(await this.client.query(q.Select(['data', prop], q.Get(q.Match(q.Index(index), key)), undefined)));
+		return Boolean(await this.client.query(q.Select(['data', prop], q.Get(q.Match(q.Index(index), key)), undefined)));
 	}
 
 	async indexExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Index(name))));
+		return Boolean(await this.client.query(q.Exists(q.Index(name))));
 	}
 
 	async functionExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Function(name))));
+		return Boolean(await this.client.query(q.Exists(q.Function(name))));
 	}
 
 	async roleExists(name: string): Promise<boolean> {
-		return !!(await this.client.query(q.Exists(q.Role(name))));
+		return Boolean(await this.client.query(q.Exists(q.Role(name))));
 	}
 
 	async callFunction(name: string, ...args: Array<FaunaExpressionArg>): Promise<unknown> {
@@ -54,7 +54,7 @@ export class Database {
 			q.CreateIndex({
 				name,
 				source: q.Var('source'),
-				...params
+				...params,
 			})
 		));
 	}
@@ -70,9 +70,17 @@ export class Database {
 		));
 	}
 
-	getName():   string      { return this.name;   }
-	getSecret(): string      { return this.secret; }
-	getClient(): FaunaClient { return this.client; }
+	getName(): string {
+		return this.name;
+	}
+
+	getSecret(): string {
+		return this.secret;
+	}
+
+	getClient(): FaunaClient {
+		return this.client;
+	}
 
 	static async create(adminSecret: string, name: string): Promise<Database> {
 		const adminClient = createFaunaClient(adminSecret);
@@ -86,6 +94,6 @@ export class Database {
 	private constructor(name: string, secret: string) {
 		this.name   = name;
 		this.secret = secret;
-		this.client = createFaunaClient(this.secret)
+		this.client = createFaunaClient(this.secret);
 	}
 }
