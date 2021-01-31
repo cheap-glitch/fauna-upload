@@ -19,10 +19,9 @@
     "database-management",
     "database-data-upload"
   ],
-  "main": "./build/index.min.js",
-  "bin": {
-    "fauna-upload": "build/bin/fauna-upload.js"
-  },
+  "main": "build/index.min.js",
+  "types": "build/index.d.ts",
+  "bin": "build/bin/fauna-upload.js",
   "files": [
     "build"
   ],
