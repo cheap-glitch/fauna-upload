@@ -30,13 +30,15 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:clean": "rm -r build &> /dev/null && npm run build && npm run test:install",
-    "coverage:collect": "jest --collectCoverage",
+    "build:clean": "rimraf build && npm run build",
+    "build:watch": "tsc --watch",
+    "coverage": "jest --collectCoverage",
     "coverage:upload": "coveralls < .coverage/lcov.info",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run test && npm run build:clean",
     "test": "jest --useStderr",
-    "test:install": "sudo npm uninstall -g fauna-upload && sudo npm link"
+    "test:install": "npm run build:clean && sudo npm uninstall -g fauna-upload && sudo npm link",
+    "test:watch": "jest --watch"
   },
   "git-hooks": {
     "pre-push": {
@@ -79,6 +81,7 @@
     "eslint": "^7.19.0",
     "jest": "^26.6.3",
     "jest-extended": "^0.11.5",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.5.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
