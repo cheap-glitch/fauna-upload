@@ -23,6 +23,9 @@
   "bin": {
     "fauna-upload": "build/bin/fauna-upload.js"
   },
+  "files": [
+    "build"
+  ],
   "directories": {
     "test": "test"
   },
