@@ -4,12 +4,12 @@
 npm-debug.log
 
 # Code coverage
-.coveralls.yml
-.coverage
+/.coverage/
+/.coveralls.yml
 
 # Build artifacts
-/build
-index*.js
+/build/
+/index*.js
 
 # Environment variables
-*.env
+/*.env
