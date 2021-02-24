@@ -14,6 +14,16 @@ beforeEach(() => new Promise(resolve => setTimeout(resolve, 800)));
 
 // Setup a new child database for each test suite
 beforeAll(async () => {
- global.db = await Database.create(adminSecret, `fauna-upload-test-${global.timestamp}`); 
+	try {
+		global.db = await Database.create(adminSecret, `fauna-upload-test-${global.timestamp}`);
+	} catch (error) {
+		console.error(error);
+	}
 });
-afterAll(() => global.db.destroy(adminSecret));
+afterAll(async () => {
+	try {
+		await global.db.destroy(adminSecret);
+	} catch (error) {
+		console.error(error);
+	}
+});

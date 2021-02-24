@@ -34,6 +34,7 @@
     "build:watch": "tsc --watch",
     "coverage": "jest --collectCoverage",
     "coverage:upload": "coveralls < .coverage/lcov.info",
+    "db:start": "docker run --rm --name faunadb -p 8443:8443 fauna/faunadb",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
     "prepublishOnly": "npm run test && npm run build:clean",
     "test": "jest --useStderr",
@@ -68,7 +69,7 @@
     "chalk": "^4.1.0",
     "cosmiconfig": "^7.0.0",
     "dotenv": "^8.2.0",
-    "faunadb": "^4.1.1",
+    "faunadb": "^4.0.0",
     "fetch-h2": "^2.5.1",
     "v8-compile-cache": "^2.2.0",
     "yargs": "^16.2.0"
