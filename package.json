@@ -32,14 +32,14 @@
     "build": "tsc",
     "build:clean": "rimraf build && npm run build",
     "build:watch": "tsc --watch",
-    "coverage": "jest --collectCoverage",
+    "coverage": "npm test -- --collectCoverage",
     "coverage:upload": "coveralls < .coverage/lcov.info",
-    "db:start": "docker run --rm --name faunadb -p 8443:8443 fauna/faunadb",
+    "db:start": "docker run --rm --name faunadb -p 8443:8443 -p 8084:8084 -v \"$(realpath .faunadb.yml)\":/etc/faunadb.yml fauna/faunadb --config /etc/faunadb.yml",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
     "prepublishOnly": "npm run test && npm run build:clean",
-    "test": "jest --useStderr",
+    "test": "jest --runInBand --useStderr",
     "test:install": "npm run build:clean && sudo npm uninstall -g fauna-upload && sudo npm link",
-    "test:watch": "jest --watch"
+    "test:watch": "npm test -- --watch"
   },
   "git-hooks": {
     "pre-push": {
@@ -68,8 +68,7 @@
     "camelcase": "^6.2.0",
     "chalk": "^4.1.0",
     "cosmiconfig": "^7.0.0",
-    "dotenv": "^8.2.0",
-    "faunadb": "^4.0.0",
+    "faunadb": "4.0.0",
     "fetch-h2": "^2.5.1",
     "v8-compile-cache": "^2.2.0",
     "yargs": "^16.2.0"
@@ -79,6 +78,7 @@
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "dotenv": "^8.2.0",
     "eslint": "^7.20.0",
     "jest": "^26.6.3",
     "jest-extended": "^0.11.5",

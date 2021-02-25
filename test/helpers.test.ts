@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { query as q } from 'faunadb';
 
 import { Database } from './helpers/database';
@@ -8,6 +9,12 @@ declare const timestamp: string;
 test('get database name', async () => { // {{{
 
 	expect(db.getName()).toBe(`fauna-upload-test-${timestamp}`);
+
+}); // }}}
+
+test('get database secret', async () => { // {{{
+
+	expect(db.getSecret()).toBeString();
 
 }); // }}}
 

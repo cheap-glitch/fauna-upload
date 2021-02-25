@@ -6,9 +6,9 @@ export async function typeExists(secret: string, typeName: string): Promise<bool
 
 async function graphql(secret: string, query: string): Promise<any> {
 	const response = await fetch('https://graphql.fauna.com/graphql', {
-		method:  'POST',
+		json: { query },
+		method: 'POST',
 		headers: { Authorization: `Bearer ${secret}` },
-		json:    { query },
 	});
 
 	return (await response.json()).data;
