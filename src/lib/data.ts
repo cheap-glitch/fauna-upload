@@ -1,7 +1,7 @@
 import { Client as FaunaClient, query as q, errors as FaunaErrors } from 'faunadb';
 import { FaunaDataCollection, FaunaQueryResult, FaunaUploadResults } from '../types';
 
-export async function uploadData(client: FaunaClient, collections: Array<FaunaDataCollection>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
+export async function uploadDocuments(client: FaunaClient, collections: Array<FaunaDataCollection>): Promise<FaunaUploadResults | FaunaErrors.FaunaHTTPError> {
 	const query = client.query(q.Map(collections, q.Lambda('collection', q.Let(
 		{
 			name:  q.Select(['collection'], q.Var('collection')),

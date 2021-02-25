@@ -2,8 +2,8 @@ import { errors as FaunaErrors } from 'faunadb';
 
 import { Database } from './helpers/database';
 
+import { uploadDocuments } from '../src/lib/data';
 import { FaunaQueryResult } from '../src/types';
-import { uploadData } from '../src/lib/data';
 
 declare const db: Database;
 declare const timestamp: string;
@@ -19,7 +19,7 @@ test('upload new data', async () => { // {{{
 	}
 
 	// Action
-	const result = await uploadData(db.getClient(), [{
+	const result = await uploadDocuments(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',
@@ -48,7 +48,7 @@ test('update existing data', async () => { // {{{
 	await expect(db.documentExists('users_keys', timestamp)).resolves.toBe(true);
 
 	// Action
-	const result = await uploadData(db.getClient(), [{
+	const result = await uploadDocuments(db.getClient(), [{
 		collection: 'users',
 		index:      'users_keys',
 		key:        'key',
@@ -65,7 +65,7 @@ test('update existing data', async () => { // {{{
 test('error while uploading data', async () => { // {{{
 
 	// Action
-	const result = await uploadData(db.getClient(), [{
+	const result = await uploadDocuments(db.getClient(), [{
 		collection: 'missing_collection',
 		index:      'missing_index',
 		key:        'key',

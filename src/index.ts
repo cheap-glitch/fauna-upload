@@ -22,5 +22,5 @@ export * from './types';
 
 export { createFaunaClient } from './lib/client';
 export { uploadSchema } from './lib/schema';
-export { uploadData } from './lib/data';
+export { uploadDocuments } from './lib/data';
 export { uploadResources } from './lib/resources';
