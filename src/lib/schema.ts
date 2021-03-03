@@ -1,19 +1,17 @@
 import { fetch, Response } from 'fetch-h2';
 
-/*
-Type uploadSchemaOptions = {
+interface UploadSchemaOptions {
 	override: boolean,
 	previews: Array<string>,
 	endpoint: string,
-};
-*/
+}
 
-export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: { override?: boolean, previews?: Array<string> } = {}): Promise<Response | Error> {
+export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string, options: Partial<UploadSchemaOptions> = {}): Promise<Response | Error> {
 	const override = options.override ?? false;
 	const previews = options.previews ?? [];
-	// Const endpoint = options.endpoint ?? 'https://graphql.fauna.com';
+	const endpoint = options.endpoint ?? 'https://graphql.fauna.com';
 
-	const query = fetch('https://graphql.fauna.com/import' + (override ? '?mode=override' : ''), {
+	const query = fetch(endpoint + '/import' + (override ? '?mode=override' : ''), {
 		body: schema,
 		method: 'POST',
 		headers: {

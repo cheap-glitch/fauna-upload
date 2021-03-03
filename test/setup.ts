@@ -6,7 +6,7 @@ interface FaunaTestsGlobal extends NodeJS.Global {
 }
 declare const global: FaunaTestsGlobal;
 
-global.timestamp = String(Date.now());
+global.timestamp = Date.now().toString();
 
 // Setup a new child database for each test suite
 beforeAll(async () => {

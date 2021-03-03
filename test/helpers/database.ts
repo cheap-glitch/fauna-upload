@@ -1,14 +1,16 @@
 import { Expr as FaunaExpression, ExprArg as FaunaExpressionArg, Client as FaunaClient, query as q } from 'faunadb';
 
-import { createFaunaClient } from './client';
+import { createLocalFaunaClient } from './client';
+import { createFaunaClient } from '../../src/lib/client';
 
 type FaunaIndexTerm   = Record<string, Array<string>>;
 type FaunaIndexParams = Record<string, boolean | string | Array<FaunaIndexTerm>>;
 
 export class Database {
-	private name:   string;
-	private secret: string;
-	private client: FaunaClient;
+	private name:     string;
+	private secret:   string;
+	private client:   FaunaClient;
+	private isRemote: boolean;
 
 	async collectionExists(name: string): Promise<boolean> {
 		return Boolean(await this.client.query(q.Exists(q.Collection(name))));
@@ -64,7 +66,9 @@ export class Database {
 	}
 
 	async destroy(adminSecret: string): Promise<void> {
-		await createFaunaClient(adminSecret).query(q.Do(
+		const adminClient = this.isRemote ? createFaunaClient(adminSecret) : createLocalFaunaClient(adminSecret);
+
+		await adminClient.query(q.Do(
 			q.Delete(q.Select(['ref'], q.KeyFromSecret(this.secret))),
 			q.Delete(q.Database(this.name))
 		));
@@ -82,18 +86,19 @@ export class Database {
 		return this.client;
 	}
 
-	static async create(adminSecret: string, name: string): Promise<Database> {
-		const adminClient = createFaunaClient(adminSecret);
+	static async create(adminSecret: string, name: string, isRemote = false): Promise<Database> {
+		const adminClient = isRemote ? createFaunaClient(adminSecret) : createLocalFaunaClient(adminSecret);
 
 		const { ref    } = await adminClient.query(q.CreateDatabase({ name })) as any;
 		const { secret } = await adminClient.query(q.CreateKey({ database: ref, role: 'admin' })) as any;
 
-		return new Database(name, secret);
+		return new Database(name, secret, isRemote);
 	}
 
-	private constructor(name: string, secret: string) {
-		this.name   = name;
-		this.secret = secret;
-		this.client = createFaunaClient(this.secret);
+	private constructor(name: string, secret: string, isRemote: boolean) {
+		this.name     = name;
+		this.secret   = secret;
+		this.isRemote = isRemote;
+		this.client   = this.isRemote ? createFaunaClient(this.secret) : createLocalFaunaClient(this.secret);
 	}
 }
