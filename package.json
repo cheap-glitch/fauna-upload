@@ -1,6 +1,6 @@
 {
   "name": "fauna-upload",
-  "description": "A Node module to upload schemas, resources and data to a Fauna database.",
+  "description": "Upload GraphQL schemas, resources and data to your Fauna databases from the command line.",
   "version": "0.8.0",
   "license": "ISC",
   "repository": {

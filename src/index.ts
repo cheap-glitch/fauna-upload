@@ -1,7 +1,8 @@
 /*!
  * fauna-upload
  *
- * A Node module to upload schemas, resources and data to a Fauna database.
+ * Upload GraphQL schemas, resources and data to your Fauna databases from the
+ * command line.
  *
  * Copyright (c) 2020-present, cheap glitch
  *
