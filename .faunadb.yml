@@ -1,4 +1,3 @@
----
 accelerate_indexes: true
 auth_root_key: root
 cluster_name: fauna

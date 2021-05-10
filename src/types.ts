@@ -1,9 +1,9 @@
-import { Expr as FaunaExpression } from 'faunadb';
+import { Expr as FaunaExpression, errors as FaunaErrors } from 'faunadb';
 
 export enum FaunaResourceType {
-	Role     = 'role',
-	Index    = 'index',
-	Function = 'function',
+	Role          = 'role',
+	Index         = 'index',
+	Function      = 'function',
 }
 
 export type FaunaResource = FaunaRole | FaunaIndex | FaunaFunction;
@@ -44,7 +44,7 @@ interface FaunaSourceObject {
 }
 
 type FaunaTermObject  = { binding?: never, field: Array<string> } | { binding: string, field?: never };
-type FaunaValueObject = FaunaTermObject & { reverse?: boolean }
+type FaunaValueObject = FaunaTermObject & { reverse?: boolean };
 
 export interface FaunaFunction {
 	name:         string
@@ -53,16 +53,18 @@ export interface FaunaFunction {
 	data?:        Record<string, unknown>
 }
 
-export interface FaunaDataCollection {
+export interface FaunaDocumentBundle {
 	collection:   string
 	index:        string
 	key:          string
 	documents:    Array<Record<string, unknown>>
 }
 
+export type UploadResponse = FaunaUploadResults | FaunaErrors.FaunaHTTPError;
+
 export type FaunaUploadResults = Array<Array<FaunaQueryResult>>;
 
 export enum FaunaQueryResult {
-	Created = 'created',
-	Updated = 'updated',
+	Created       = 'created',
+	Updated       = 'updated',
 }

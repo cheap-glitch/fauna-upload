@@ -89,7 +89,9 @@ export class Database {
 	static async create(adminSecret: string, name: string, isRemote = false): Promise<Database> {
 		const adminClient = isRemote ? createFaunaClient(adminSecret) : createLocalFaunaClient(adminSecret);
 
-		const { ref    } = await adminClient.query(q.CreateDatabase({ name })) as any;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const { ref } = await adminClient.query(q.CreateDatabase({ name })) as any;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const { secret } = await adminClient.query(q.CreateKey({ database: ref, role: 'admin' })) as any;
 
 		return new Database(name, secret, isRemote);

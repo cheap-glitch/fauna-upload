@@ -24,7 +24,7 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 	let response;
 	try {
 		response = await query;
-	} catch(error) {
+	} catch (error) {
 		/* istanbul ignore next */
 		return new Error(JSON.stringify(error, undefined, 2));
 	}
