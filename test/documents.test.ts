@@ -2,8 +2,8 @@ import { errors as FaunaErrors } from 'faunadb';
 
 import { Database } from './helpers/database';
 
-import { uploadDocuments } from '../src/lib/data';
 import { FaunaQueryResult } from '../src/types';
+import { uploadDocuments } from '../src/lib/documents';
 
 declare const db: Database;
 declare const timestamp: string;
