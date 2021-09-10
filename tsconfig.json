@@ -1,9 +1,9 @@
 {
+  "extends": "@cheap-glitch/typescript-config/index.json",
   "files": [
     "src/index.ts",
     "bin/fauna-upload.ts"
   ],
-
   "compilerOptions": {
     "lib":    ["esnext", "dom"],
     "target": "es2018",
