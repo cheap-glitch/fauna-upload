@@ -5,26 +5,10 @@
   ],
 
   "compilerOptions": {
-    "module":                     "commonjs",
-    "target":                     "es2018",
-
-    "outDir":                     "build",
-    "declaration":                true,
-		"noEmitOnError":              true,
-    "removeComments":             true,
-
-    "lib":                        ["dom", "es2019"],
-    "moduleResolution":           "node",
-    "esModuleInterop":            true,
-    "resolveJsonModule":          true,
-
-    "strict":                     true,
-    "downlevelIteration":         true,
-		"noFallthroughCasesInSwitch": true,
-    "noImplicitAny":              true,
-    "noImplicitReturns":          true,
-    "noImplicitThis":             true,
-    "noUnusedLocals":             true,
-		"noUnusedParameters":         true
+    "lib":    ["esnext", "dom"],
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "build",
+    "useUnknownInCatchVariables": false
   }
 }
