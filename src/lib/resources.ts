@@ -1,4 +1,5 @@
 import { Client as FaunaClient, query as q } from 'faunadb';
+
 import { FaunaResource, FaunaResourceType, FaunaQueryResult, FaunaUploadResults, UploadResponse } from '../types';
 
 export async function uploadResources(client: FaunaClient, type: FaunaResourceType, resources: Array<FaunaResource>): Promise<UploadResponse> {

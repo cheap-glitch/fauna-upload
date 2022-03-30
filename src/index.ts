@@ -20,7 +20,7 @@
  */
 
 export * from './types';
-export { createFaunaClient } from './lib/client';
 export { uploadSchema } from './lib/schema';
 export { uploadDocuments } from './lib/documents';
 export { uploadResources } from './lib/resources';
+export { createFaunaClient } from './lib/client';

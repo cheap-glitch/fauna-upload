@@ -1,7 +1,7 @@
 import { Expr as FaunaExpression, ExprArg as FaunaExpressionArg, Client as FaunaClient, query as q } from 'faunadb';
 
-import { createLocalFaunaClient } from './client';
 import { createFaunaClient } from '../../src/lib/client';
+import { createLocalFaunaClient } from './client';
 
 type FaunaIndexTerm   = Record<string, Array<string>>;
 type FaunaIndexParams = Record<string, boolean | string | Array<FaunaIndexTerm>>;

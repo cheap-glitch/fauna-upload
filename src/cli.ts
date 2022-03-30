@@ -2,11 +2,11 @@ import ora from 'ora';
 import chalk from 'chalk';
 import yargs from 'yargs';
 import dotenv from 'dotenv';
-import confirm from 'yesno';
 import findUp from 'find-up';
+import confirm from 'yesno';
 
 import { query as q } from 'faunadb';
-import { CompilerOptions as TSCompilerOptions } from 'typescript';
+import type { CompilerOptions as TSCompilerOptions } from 'typescript';
 
 import { createReadStream } from 'fs';
 import { tmpdir as osTempDir } from 'os';

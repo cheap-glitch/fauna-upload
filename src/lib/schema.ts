@@ -15,8 +15,8 @@ export async function uploadSchema(schema: NodeJS.ReadableStream, secret: string
 		body: schema,
 		method: 'POST',
 		headers: {
-			'Content-Type': 'text/plain',
-			'Authorization': `Bearer ${secret}`,
+			'Content-Type':     'text/plain',
+			'Authorization':    `Bearer ${secret}`,
 			'X-Schema-Preview': previews.join(),
 		},
 	});

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import 'v8-compile-cache';
-
 import { release } from 'os';
 import { formatWithOptions } from 'util';
 
