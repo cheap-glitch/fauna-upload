@@ -1,23 +1,27 @@
 {
   "name": "fauna-upload",
-  "description": "Upload GraphQL schemas, resources and data to your Fauna databases from the command line.",
   "version": "0.8.0",
+  "description": "Upload GraphQL schemas, resources and data to your Fauna databases from the command line.",
   "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cheap-glitch/fauna-upload.git"
-  },
-  "bugs": {
-    "url": "https://github.com/cheap-glitch/fauna-upload/issues"
-  },
   "author": "cheap glitch <cheap.glitch@gmail.com> (https://github.com/cheap-glitch)",
+  "repository": "cheap-glitch/fauna-upload",
   "homepage": "https://github.com/cheap-glitch/fauna-upload#readme",
+  "bugs": "https://github.com/cheap-glitch/fauna-upload/issues",
+  "funding": "https://github.com/sponsors/cheap-glitch",
   "keywords": [
+    "cli",
+    "collections",
+    "data",
+    "database",
     "fauna",
     "faunadb",
-    "fauna-database",
-    "database-management",
-    "database-data-upload"
+    "functions",
+    "graphql",
+    "indexes",
+    "schema",
+    "shell",
+    "sync",
+    "upload"
   ],
   "main": "build/index.min.js",
   "types": "build/index.d.ts",
