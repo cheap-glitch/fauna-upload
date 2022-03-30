@@ -1,14 +1,14 @@
 {
-  "extends": "@cheap-glitch/typescript-config/index.json",
+  "extends": "@cheap-glitch/tsconfig/index.json",
   "files": [
     "src/index.ts",
     "bin/fauna-upload.ts"
   ],
   "compilerOptions": {
-    "lib":    ["esnext", "dom"],
+    "useUnknownInCatchVariables": false,
+    "lib": ["es2021", "dom"],
     "target": "es2018",
     "module": "commonjs",
-    "outDir": "build",
-    "useUnknownInCatchVariables": false
+    "outDir": "dist"
   }
 }

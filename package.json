@@ -23,32 +23,25 @@
     "sync",
     "upload"
   ],
-  "main": "build/index.min.js",
-  "types": "build/index.d.ts",
-  "bin": "build/bin/fauna-upload.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": "dist/bin/fauna-upload.js",
   "files": [
-    "build"
+    "dist"
   ],
   "directories": {
     "test": "test"
   },
   "scripts": {
     "build": "tsc",
-    "build:clean": "rimraf build && npm run build",
+    "build:clean": "empty-dir dist && npm run build",
     "build:watch": "tsc --watch",
     "coverage": "npm test -- --collectCoverage",
     "coverage:upload": "coveralls < .coverage/lcov.info",
     "lint": "eslint . --ext .ts --ignore-path .gitignore",
-    "prepublishOnly": "npm run test && npm run build:clean",
     "test": "jest --runInBand",
-    "test:install": "npm run build:clean && sudo npm uninstall -g fauna-upload && sudo npm link",
     "test:start": "docker run --rm --name faunadb -p 8443:8443 -p 8084:8084 -v $(realpath .faunadb.yml):/etc/faunadb.yml fauna/faunadb --config /etc/faunadb.yml",
     "test:watch": "npm test -- --watch"
-  },
-  "git-hooks": {
-    "pre-push": {
-      "noVerify": true
-    }
   },
   "eslintConfig": {
     "root": true,
@@ -66,6 +59,11 @@
     ],
     "slowTestThreshold": 15,
     "coverageDirectory": ".coverage"
+  },
+  "git-hooks": {
+    "pre-push": {
+      "noVerify": true
+    }
   },
   "dependencies": {
     "faunadb": "^4.0.0",
